@@ -90,10 +90,19 @@ class DOMNodeCollection {
   attr(attribute, value) { //yesh li be'aya im zeh, aval oved.
 
       if (!value) {
+        if (this.elements[0].attributes[attribute] === undefined) {
+          return undefined
+        } else {  
         return this.elements[0].attributes[attribute].nodeValue
+        }
+
       } else {
         this.elements.forEach((element) => {
-          element.attributes[attribute].nodeValue = value
+          if (element.attributes[attribute]) {
+            element.attributes[attribute].nodeValue= value;
+          } else {
+            element.setAttribute(attribute, value);
+          }
         });
       }
   }
