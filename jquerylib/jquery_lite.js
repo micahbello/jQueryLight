@@ -96,24 +96,21 @@ function $l(selector) {
     return Object.assign(...args);
   }
 
+  $l.ajax = (optionsObject) => {
+
+    const xhr = new XMLHttpRequest();
+    xhr.open(optionsObject.type, optionsObject.url);
+    xhr.send();
+
+    xhr.onload = function () {
+    console.log(xhr.status);
+    console.log(JSON.parse(xhr.response));
+  }
+
+  }
 
 
 window.$l = $l;
-
-//solultion given by the course
-// window.$l = (arg) => {
-//   switch (typeof arg) {
-//     case "function":
-//       return registerDocReadyCallback(arg);
-//     case "string":
-//       // return getNodesFromDom(arg);
-//       console.log("poop")
-//     case "object":
-//       if (arg instanceof HTMLElement) {
-//         return new DomNodeCollection([arg]);
-//       }
-//   }
-// };
 
 
 /***/ }),
