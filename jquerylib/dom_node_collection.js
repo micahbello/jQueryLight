@@ -87,6 +87,17 @@ class DOMNodeCollection {
     });
   }
 
+  attr(attribute, value) { //yesh li be'aya im zeh, aval oved.
+
+      if (!value) {
+        return this.elements[0].attributes[attribute].nodeValue
+      } else {
+        this.elements.forEach((element) => {
+          element.attributes[attribute].nodeValue = value
+        });
+      }
+  }
+
 }
 
 module.exports = DOMNodeCollection;
