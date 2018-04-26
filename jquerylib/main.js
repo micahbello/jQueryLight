@@ -28,16 +28,13 @@ function $l(selector) {
   }
 
   $l.ajax = (optionsObject) => {
-
     const xhr = new XMLHttpRequest();
     xhr.open(optionsObject.type, optionsObject.url);
     xhr.send();
-
     xhr.onload = function () {
     console.log(xhr.status);
     console.log(JSON.parse(xhr.response));
-  }
-
+    }
   }
 
 

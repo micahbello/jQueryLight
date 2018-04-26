@@ -97,16 +97,13 @@ function $l(selector) {
   }
 
   $l.ajax = (optionsObject) => {
-
     const xhr = new XMLHttpRequest();
     xhr.open(optionsObject.type, optionsObject.url);
     xhr.send();
-
     xhr.onload = function () {
     console.log(xhr.status);
     console.log(JSON.parse(xhr.response));
-  }
-
+    }
   }
 
 
@@ -196,7 +193,7 @@ class DOMNodeCollection {
   on(e, callback) {
     this.elements.forEach(node => {
       node.addEventListener(e, callback)
-      node.callback = callback
+      node.callback = callback;
     });
   }
 
@@ -206,12 +203,12 @@ class DOMNodeCollection {
     });
   }
 
-  attr(attribute, value) { //yesh li be'aya im zeh, aval oved.
+  attr(attribute, value) {
 
       if (!value) {
         if (this.elements[0].attributes[attribute] === undefined) {
           return undefined
-        } else {  
+        } else {
         return this.elements[0].attributes[attribute].nodeValue
         }
 
@@ -224,6 +221,41 @@ class DOMNodeCollection {
           }
         });
       }
+  }
+
+  addClass(classNames) {
+    this.elements.forEach(element => {
+      if (element.classList.length === 0) {
+      element.setAttribute("class", classNames)
+      } else {
+        let classNamesSplit = classNames.split(" ");
+        for(let i = 0; i < classNamesSplit.length; i++) {
+          element.classList.add(classNamesSplit[i]);
+        }
+
+      }
+    });
+  }
+  //
+  removeClass(classNames) {
+    if (!classNames) {
+      this.elements.forEach(element => {
+        element.setAttribute("class", "");
+      });
+    } else {
+      let classNamesSplit = classNames.split(" ");
+      this.elements.forEach(element => {
+        let classListLength = element.classList.length;
+
+        for(let i = 0; i < classListLength; i++) {
+          for (let j = 0; j < classNamesSplit.length; j++) {
+            if (element.classList[i] === classNamesSplit[j]) {
+              element.classList.remove(classNamesSplit[j]);
+            }
+          }
+        }
+      });
+    }
   }
 
 }
