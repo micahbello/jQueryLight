@@ -1,4 +1,5 @@
 const DOMNodeCollection = require("./dom_node_collection.js");
+// import DOMNodeCollection from './dom_node_collection.js';
 //
 function $l(selector) {
 
@@ -37,5 +38,4 @@ function $l(selector) {
     }
   }
 
-
-window.$l = $l;
+window.$l = $l

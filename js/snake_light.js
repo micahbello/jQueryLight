@@ -68,46 +68,15 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 const DOMNodeCollection = __webpack_require__(1);
-//
-function $l(selector) {
+const main_functions = __webpack_require__(2); //why does matchingDescendants
+//work if I am not exprting the main_functions file??
+const Snake = __webpack_require__(3);
+const Board = __webpack_require__(6);
 
-  if(document.readyState === "complete" && typeof selector === "function") {
-    selector();
-  }
+document.addEventListener("DOMContentLoaded", () => {
 
-  let queue = [];
-
-  if (typeof selector === "string") {
-    let nodelist = document.querySelectorAll(selector);
-    nodelistArray = Array.from(nodelist);
-    return new DOMNodeCollection(nodelistArray)
-  } else if (typeof selector === "function") {
-    queue.push(selector)
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    for(let i = 0; i < queue.length; i++){
-      queue[i]();
-    }
-  });
-}
-
-  $l.extend = (...args) => {
-    return Object.assign(...args);
-  }
-
-  $l.ajax = (optionsObject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open(optionsObject.type, optionsObject.url);
-    xhr.send();
-    xhr.onload = function () {
-    console.log(xhr.status);
-    console.log(JSON.parse(xhr.response));
-    }
-  }
-
-
-window.$l = $l;
+  let board = new Board();
+});
 
 
 /***/ }),
@@ -261,6 +230,169 @@ class DOMNodeCollection {
 }
 
 module.exports = DOMNodeCollection;
+// export default DOMNodeCollection;
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const DOMNodeCollection = __webpack_require__(1);
+// import DOMNodeCollection from './dom_node_collection.js';
+//
+function $l(selector) {
+
+  if(document.readyState === "complete" && typeof selector === "function") {
+    selector();
+  }
+
+  let queue = [];
+
+  if (typeof selector === "string") {
+    let nodelist = document.querySelectorAll(selector);
+    nodelistArray = Array.from(nodelist);
+    return new DOMNodeCollection(nodelistArray)
+  } else if (typeof selector === "function") {
+    queue.push(selector)
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    for(let i = 0; i < queue.length; i++){
+      queue[i]();
+    }
+  });
+}
+
+  $l.extend = (...args) => {
+    return Object.assign(...args);
+  }
+
+  $l.ajax = (optionsObject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open(optionsObject.type, optionsObject.url);
+    xhr.send();
+    xhr.onload = function () {
+    console.log(xhr.status);
+    console.log(JSON.parse(xhr.response));
+    }
+  }
+
+window.$l = $l
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Coord = __webpack_require__(4);
+
+class Snake {
+  constuctor(segments){
+    this.segments = segments;
+    this.direction = "N";
+  }
+
+  move() {
+
+  }
+
+  turn() {
+    
+  }
+
+
+}
+
+
+module.exports = Snake;
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(module) {class Coord {
+  constuctor() {
+  }
+
+  plus() {
+
+  }
+
+  equals() {
+
+  }
+
+  isOpposite() {
+    
+  }
+
+}
+
+module.export = Coord;
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)(module)))
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+module.exports = function(module) {
+	if(!module.webpackPolyfill) {
+		module.deprecate = function() {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if(!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+class Board {
+  constructor() {
+    this.grid = this.makegrid();
+  }
+
+
+  makegrid() {
+    for (let i = 0; i <= 21; i++) {
+      $l("section").append("<ul>")
+    }
+
+    const ulListItems = () => {
+      let items = "";
+      for (let i = 0; i <= 21; i++) {
+        items += "<li>";
+      }
+      return items;
+    }
+    //
+    $l("ul").append(ulListItems())
+
+  }
+
+
+
+}
+
+module.exports = Board;
 
 
 /***/ })
