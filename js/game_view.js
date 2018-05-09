@@ -27,6 +27,15 @@ class GameView {
     return isMatch;
   }
 
+  appleCoordsMatch(elementCoord, appleCoords) {
+    let isMatch = false;
+      if (appleCoords[0] === elementCoord[0] && appleCoords[1] === elementCoord[1]) {
+        isMatch = true;
+      }
+    return isMatch;
+  }
+
+
   render() {
     $l("section").html(" ");
 
@@ -52,7 +61,7 @@ class GameView {
     $l("li").elements.forEach(element => {
       element.coord = [coord1, coord2];
 
-      if (this.coordsEquate(element.coord, this.board.snake.segments) === true) {
+      if (this.coordsEquate(element.coord, this.board.snake.segments)) {
         element.className = "snake-segment";
         if (this.board.snake.segments[0][0] === element.coord[0]
           && this.board.snake.segments[0][1] === element.coord[1]) {
@@ -60,8 +69,18 @@ class GameView {
         }
       }
 
-      // element.textContent = `${coord1}`;
+      // element.textContent = `${coord2}`;
 
+      if (this.appleCoordsMatch(element.coord, this.board.apple.coord)) {
+        element.className = "apple";
+      }
+
+      //testing position of appleSnake collision detection
+
+      if (this.board.snakeAppleCollision()) {
+        this.board.newApple();
+        this.board.snake.grow(); 
+      }
 
       if (coord1 + 1 > 19) {
         coord1 = 0;

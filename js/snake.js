@@ -10,7 +10,6 @@ class Snake {
   move() {
     let newSegments = [];
     if (this.direction === "up") {
-      console.log(this.segments[0][0] != this.segments[1][0])
       for (let i = 0; i < this.segments.length; i ++) {
         if (i === 0) {
           let coord1 = this.segments[i][0];
@@ -74,6 +73,10 @@ class Snake {
       this.turning = true;
     }
   }
+
+  // grow() {
+  //   t
+  // }
 
   isOpposite(newDirection, currentDirection) {
     if (newDirection === "left" && currentDirection === "right") {

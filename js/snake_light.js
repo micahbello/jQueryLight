@@ -294,7 +294,6 @@ class Snake {
   move() {
     let newSegments = [];
     if (this.direction === "up") {
-      console.log(this.segments[0][0] != this.segments[1][0])
       for (let i = 0; i < this.segments.length; i ++) {
         if (i === 0) {
           let coord1 = this.segments[i][0];
@@ -358,6 +357,10 @@ class Snake {
       this.turning = true;
     }
   }
+
+  // grow() {
+  //   t
+  // }
 
   isOpposite(newDirection, currentDirection) {
     if (newDirection === "left" && currentDirection === "right") {
@@ -437,10 +440,12 @@ module.exports = function(module) {
 /***/ (function(module, exports, __webpack_require__) {
 
 const Snake = __webpack_require__(3);
+const Apple = __webpack_require__(8);
 
 class Board {
   constructor() {
     this.grid = this.makeGrid();
+    this.apple = new Apple(this.randomAppleCoord());
     this.snake = new Snake([[10, 10], [10,11], [10, 12], [10, 13], [10, 14]]);
   }
 
@@ -452,8 +457,29 @@ class Board {
         grid.push([i,j])
       }
     }
-
     return grid;
+  }
+
+  randomAppleCoord() {
+    let coord1 = Math.floor((Math.random() * 19) + 1);
+    let coord2 = Math.floor((Math.random() * 19) + 1);
+
+    //write code here to make sure the apple never spawns on snake coords
+
+    return [coord1, coord2];
+  }
+
+  snakeAppleCollision() {
+    let colliding = false;
+
+    if (this.snake.segments[0][0] === this.apple.coord[0] && this.snake.segments[0][1] === this.apple.coord[1]) {
+      colliding = true;
+    }
+    return colliding;
+  }
+
+  newApple() {
+    this.apple = new Apple(this.randomAppleCoord());
   }
 
 }
@@ -494,6 +520,15 @@ class GameView {
     return isMatch;
   }
 
+  appleCoordsMatch(elementCoord, appleCoords) {
+    let isMatch = false;
+      if (appleCoords[0] === elementCoord[0] && appleCoords[1] === elementCoord[1]) {
+        isMatch = true;
+      }
+    return isMatch;
+  }
+
+
   render() {
     $l("section").html(" ");
 
@@ -519,7 +554,7 @@ class GameView {
     $l("li").elements.forEach(element => {
       element.coord = [coord1, coord2];
 
-      if (this.coordsEquate(element.coord, this.board.snake.segments) === true) {
+      if (this.coordsEquate(element.coord, this.board.snake.segments)) {
         element.className = "snake-segment";
         if (this.board.snake.segments[0][0] === element.coord[0]
           && this.board.snake.segments[0][1] === element.coord[1]) {
@@ -527,8 +562,18 @@ class GameView {
         }
       }
 
-      // element.textContent = `${coord1}`;
+      // element.textContent = `${coord2}`;
 
+      if (this.appleCoordsMatch(element.coord, this.board.apple.coord)) {
+        element.className = "apple";
+      }
+
+      //testing position of appleSnake collision detection
+
+      if (this.board.snakeAppleCollision()) {
+        this.board.newApple();
+        this.board.snake.grow(); 
+      }
 
       if (coord1 + 1 > 19) {
         coord1 = 0;
@@ -554,6 +599,19 @@ directionKeys = {
 
 
 module.exports = GameView;
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+class Apple {
+  constructor(coord) {
+    this.coord = coord
+  }
+}
+
+module.exports = Apple;
 
 
 /***/ })
