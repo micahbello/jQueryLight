@@ -68,15 +68,13 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 const DOMNodeCollection = __webpack_require__(1);
-const main_functions = __webpack_require__(2); //why does matchingDescendants
-//work if I am not exprting the main_functions file??
-const Snake = __webpack_require__(3);
-const Board = __webpack_require__(6);
+const main_functions = __webpack_require__(2);
+const GameView = __webpack_require__(7);
 
-document.addEventListener("DOMContentLoaded", () => {
 
-  let board = new Board();
-});
+  $l(function() {
+   let board = new GameView();
+  })
 
 
 /***/ }),
@@ -287,19 +285,92 @@ window.$l = $l
 const Coord = __webpack_require__(4);
 
 class Snake {
-  constuctor(segments){
+  constructor(segments){
     this.segments = segments;
-    this.direction = "N";
+    this.turning = false;
+    this.direction = "up";
   }
 
   move() {
+    let newSegments = [];
+    if (this.direction === "up") {
+      console.log(this.segments[0][0] != this.segments[1][0])
+      for (let i = 0; i < this.segments.length; i ++) {
+        if (i === 0) {
+          let coord1 = this.segments[i][0];
+          let coord2 = this.segments[i][1] - 1;
 
+          let newSegment = [coord1, coord2];
+          newSegments[i] = newSegment;
+          this.turning = false;
+        } else {
+          newSegments[i] = this.segments[i - 1];
+        }
+      }
+    } else if (this.direction === "down") {
+      for (let i = 0; i < this.segments.length; i ++) {
+        if (i === 0) {
+          let coord1 = this.segments[i][0];
+          let coord2 = this.segments[i][1] + 1;
+
+          let newSegment = [coord1, coord2];
+          newSegments[i] = newSegment;
+          this.turning = false;
+        } else {
+          newSegments[i] = this.segments[i - 1];
+        }
+      }
+    } else if (this.direction === "left") {
+      for (let i = 0; i < this.segments.length; i ++) {
+        if (i === 0) {
+          let coord1 = this.segments[i][0] - 1;
+          let coord2 = this.segments[i][1];
+
+          let newSegment = [coord1, coord2];
+          newSegments[i] = newSegment;
+          this.turning = false;
+        } else {
+          newSegments[i] = this.segments[i - 1];
+        }
+      }
+    } else if (this.direction === "right") {
+
+      for (let i = 0; i < this.segments.length; i ++) {
+        if (i === 0) {
+          let coord1 = this.segments[i][0] + 1;
+          let coord2 = this.segments[i][1];
+
+          let newSegment = [coord1, coord2];
+          newSegments[i] = newSegment;
+          this.turning = false;
+        } else {
+          newSegments[i] = this.segments[i - 1];
+        }
+      }
+    }
+
+    this.segments = newSegments;
   }
 
-  turn() {
-    
+  turn(newDirection) {
+    if (this.isOpposite(newDirection, this.direction) === false && !this.turning) {
+      this.direction = newDirection;
+      this.turning = true;
+    }
   }
 
+  isOpposite(newDirection, currentDirection) {
+    if (newDirection === "left" && currentDirection === "right") {
+      return true;
+    } else if (newDirection === "right" && currentDirection === "left") {
+      return true;
+    } else if (newDirection === "up" && currentDirection === "down") {
+      return true;
+    } else if (newDirection === "down" && currentDirection === "up") {
+      return true;
+    }
+    return false;
+  }
 
 }
 
@@ -363,36 +434,126 @@ module.exports = function(module) {
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+const Snake = __webpack_require__(3);
 
 class Board {
   constructor() {
-    this.grid = this.makegrid();
+    this.grid = this.makeGrid();
+    this.snake = new Snake([[10, 10], [10,11], [10, 12], [10, 13], [10, 14]]);
   }
 
+  makeGrid() {
+    let grid = [];
 
-  makegrid() {
-    for (let i = 0; i <= 21; i++) {
+    for (let i = 0; i < 21; i++) {
+      for (let j = 0; j < 21; j++) {
+        grid.push([i,j])
+      }
+    }
+
+    return grid;
+  }
+
+}
+
+module.exports = Board;
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Board = __webpack_require__(6);
+
+class GameView {
+  constructor($el) {
+    this.$el = $el;
+    this.board = new Board();
+    this.intervalId = window.setInterval(this.render.bind(this), 300);
+
+    $l("body").on("keydown", this.handleKeyDown.bind(this));
+
+  }
+
+  handleKeyDown(e) {
+    if (directionKeys[e.keyCode]) {
+      this.board.snake.turn(directionKeys[e.keyCode])
+    }
+  }
+
+  coordsEquate(elementCoord, snakeSegments) {
+
+    let isMatch = false;
+    snakeSegments.forEach((segment, idx) => {
+      if (segment[0] === elementCoord[0] && segment[1] === elementCoord[1]) {
+        isMatch = true;
+      }
+    });
+    return isMatch;
+  }
+
+  render() {
+    $l("section").html(" ");
+
+    this.board.snake.move();
+
+    for (let i = 0; i < this.board.grid[this.board.grid.length - 1][1]; i++) {
       $l("section").append("<ul>")
     }
 
     const ulListItems = () => {
       let items = "";
-      for (let i = 0; i <= 21; i++) {
+
+      for (let i = 0; i < this.board.grid[this.board.grid.length - 1][1]; i++) {
         items += "<li>";
       }
       return items;
     }
-    //
-    $l("ul").append(ulListItems())
 
+    $l("ul").append(ulListItems());
+
+    let coord1 = 0 // applies to horizontal
+    let coord2 = 0; // applies to vertical
+    $l("li").elements.forEach(element => {
+      element.coord = [coord1, coord2];
+
+      if (this.coordsEquate(element.coord, this.board.snake.segments) === true) {
+        element.className = "snake-segment";
+        if (this.board.snake.segments[0][0] === element.coord[0]
+          && this.board.snake.segments[0][1] === element.coord[1]) {
+            element.textContent = ";)";
+        }
+      }
+
+      // element.textContent = `${coord1}`;
+
+
+      if (coord1 + 1 > 19) {
+        coord1 = 0;
+      } else {
+        coord1 += 1;
+      }
+
+      if (coord1 === 0) {
+        coord2 += 1;
+      }
+
+    });
   }
-
-
 
 }
 
-module.exports = Board;
+directionKeys = {
+  38: "up",
+  39: "right",
+  40: "down",
+  37: "left"
+};
+
+
+module.exports = GameView;
 
 
 /***/ })

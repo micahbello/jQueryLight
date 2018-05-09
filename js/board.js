@@ -1,27 +1,22 @@
+const Snake = require("./snake.js");
+
 class Board {
   constructor() {
-    this.grid = this.makegrid();
+    this.grid = this.makeGrid();
+    this.snake = new Snake([[10, 10], [10,11], [10, 12], [10, 13], [10, 14]]);
   }
 
+  makeGrid() {
+    let grid = [];
 
-  makegrid() {
-    for (let i = 0; i <= 21; i++) {
-      $l("section").append("<ul>")
-    }
-
-    const ulListItems = () => {
-      let items = "";
-      for (let i = 0; i <= 21; i++) {
-        items += "<li>";
+    for (let i = 0; i < 21; i++) {
+      for (let j = 0; j < 21; j++) {
+        grid.push([i,j])
       }
-      return items;
     }
-    //
-    $l("ul").append(ulListItems())
 
+    return grid;
   }
-
-
 
 }
 

@@ -1,10 +1,8 @@
 const DOMNodeCollection = require("../jquerylib/dom_node_collection.js");
-const main_functions = require("../jquerylib/main_functions.js"); //why does matchingDescendants
-//work if I am not exprting the main_functions file??
-const Snake = require("./snake.js");
-const Board = require("./board.js");
+const main_functions = require("../jquerylib/main_functions.js");
+const GameView = require("./game_view.js");
 
-document.addEventListener("DOMContentLoaded", () => {
 
-  let board = new Board();
-});
+  $l(function() {
+   let board = new GameView();
+  })
