@@ -60,25 +60,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const DOMNodeCollection = __webpack_require__(1);
-const main_functions = __webpack_require__(2);
-const GameView = __webpack_require__(7);
-
-
-  $l(function() {
-   let board = new GameView();
-  })
-
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports) {
 
 class DOMNodeCollection {
@@ -232,10 +218,24 @@ module.exports = DOMNodeCollection;
 
 
 /***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const DOMNodeCollection = __webpack_require__(0);
+const main_functions = __webpack_require__(2);
+const GameView = __webpack_require__(3);
+
+
+  $l(function() {
+   let board = new GameView();
+  })
+
+
+/***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const DOMNodeCollection = __webpack_require__(1);
+const DOMNodeCollection = __webpack_require__(0);
 // import DOMNodeCollection from './dom_node_collection.js';
 //
 function $l(selector) {
@@ -282,7 +282,228 @@ window.$l = $l
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Coord = __webpack_require__(4);
+const Board = __webpack_require__(4);
+
+class GameView {
+  constructor($el) {
+    this.$el = $el;
+    this.board = new Board();
+    this.intervalId = window.setInterval(this.render.bind(this), 200);
+    // this.inSession = true;
+
+    $l("body").on("keydown", this.handleKeyDown.bind(this));
+
+  }
+
+  handleKeyDown(e) {
+    if (directionKeys[e.keyCode]) {
+      this.board.snake.turn(directionKeys[e.keyCode])
+    }
+  }
+
+  coordsEquate(elementCoord, snakeSegments) {
+
+    let isMatch = false;
+    snakeSegments.forEach((segment, idx) => {
+      if (segment[0] === elementCoord[0] && segment[1] === elementCoord[1]) {
+        isMatch = true;
+      }
+    });
+    return isMatch;
+  }
+
+  appleCoordsMatch(elementCoord, appleCoords) {
+    let isMatch = false;
+      if (appleCoords[0] === elementCoord[0] && appleCoords[1] === elementCoord[1]) {
+        isMatch = true;
+      }
+    return isMatch;
+  }
+
+
+  render() {
+
+    if (this.board.loosingCollisions()) {
+      this.board.inSession = false;
+      window.clearInterval(this.intervalId);
+      $l("p").html("hello")
+    }
+
+
+    if (this.board.inSession === true) {
+      $l("section").html(" ");
+
+      this.board.snake.move();
+
+      for (let i = 0; i < this.board.grid[this.board.grid.length - 1][1]; i++) {
+        $l("section").append("<ul>")
+      }
+
+      const ulListItems = () => {
+        let items = "";
+
+        for (let i = 0; i < this.board.grid[this.board.grid.length - 1][1]; i++) {
+          items += "<li>";
+        }
+        return items;
+      }
+
+      $l("ul").append(ulListItems());
+
+      let coord1 = 0 // applies to horizontal
+      let coord2 = 0; // applies to vertical
+      $l("li").elements.forEach(element => {
+        element.coord = [coord1, coord2];
+
+        if (this.coordsEquate(element.coord, this.board.snake.segments)) {
+          element.className = "snake-segment";
+          if (this.board.snake.segments[0][0] === element.coord[0]
+            && this.board.snake.segments[0][1] === element.coord[1]) {
+              element.textContent = ";)";
+          }
+        }
+
+        // element.textContent = `${coord2}`;
+
+        if (this.appleCoordsMatch(element.coord, this.board.apple.coord)) {
+          element.className = "apple";
+        }
+
+        //testing position of appleSnake collision detection
+        if (this.board.snakeAppleCollision()) {
+          this.board.newApple();
+          this.board.snake.grow();
+          this.board.score += 10;
+        }
+
+        if (coord1 + 1 > 19) {
+          coord1 = 0;
+        } else {
+          coord1 += 1;
+        }
+
+        if (coord1 === 0) {
+          coord2 += 1;
+        }
+
+      });
+
+      if (this.board.snake.size === 1) {
+        $l(".score").html("size: 1 link | score: 0")
+      } else {
+        $l(".score").html(`size: ${this.board.snake.size} links | score: ${this.board.score}`)
+      }
+    }
+  }
+
+}
+
+directionKeys = {
+  38: "up",
+  39: "right",
+  40: "down",
+  37: "left"
+};
+
+
+module.exports = GameView;
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Snake = __webpack_require__(5);
+const Apple = __webpack_require__(8);
+
+class Board {
+  constructor() {
+    this.grid = this.makeGrid();
+    this.snake = new Snake();
+    this.apple = new Apple(this.randomAppleCoord());
+    this.score = 0;
+    this.inSession = true;
+  }
+
+  makeGrid() {
+    let grid = [];
+
+    for (let i = 0; i < 21; i++) {
+      for (let j = 0; j < 21; j++) {
+        grid.push([i,j])
+      }
+    }
+    return grid;
+  }
+
+  randomAppleCoord() {
+    let coord1 = Math.floor((Math.random() * 19) + 1);
+    let coord2 = Math.floor((Math.random() * 19) + 1);
+
+    //this makes sure the apple never spawns on snake coords
+    let currentSnakeCoords = this.snake.segments;
+    let conflict = false;
+
+    currentSnakeCoords.forEach(coord => {
+      if (coord[0] === coord1 && coord[1] === coord2) {
+        conflict = true;
+      }
+    });
+
+    if (conflict === false ) {
+      return [coord1, coord2];
+    } else {
+      console.log("HOOOO")
+      return this.randomAppleCoord();
+    }
+  }
+
+  snakeAppleCollision() {
+    let colliding = false;
+
+    if (this.snake.segments[0][0] === this.apple.coord[0]
+      && this.snake.segments[0][1] === this.apple.coord[1]) {
+      colliding = true;
+    }
+    return colliding;
+  }
+
+  loosingCollisions() {
+
+    //first if will detect when the snake is outside of the grid
+    //second if will detect when the snake collides with itself
+    let colliding = false;
+
+    if (this.snake.segments[0][0] < 0 || this.snake.segments[0][0] > 20
+      || this.snake.segments[0][1] < 0 || this.snake.segments[0][1] > 19) {
+      colliding = true;
+    } else if (this.snake.size > 1){
+      let snakeSegments = this.snake.segments.slice(1); // all segments except head
+      let snakeHead = this.snake.segments[0];
+
+      snakeSegments.forEach(segment => {
+        if (segment[0] === snakeHead[0] && segment[1] === snakeHead[1]) {
+          colliding = true;
+        }
+      });
+    }
+    return colliding;
+  }
+
+  newApple() {
+    this.apple = new Apple(this.randomAppleCoord());
+  }
+
+}
+
+module.exports = Board;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Coord = __webpack_require__(6);
 
 class Snake {
   constructor(){
@@ -413,7 +634,7 @@ module.exports = Snake;
 
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {class Coord {
@@ -429,17 +650,17 @@ module.exports = Snake;
   }
 
   isOpposite() {
-
+    
   }
 
 }
 
 module.export = Coord;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)(module)))
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -467,227 +688,6 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Snake = __webpack_require__(3);
-const Apple = __webpack_require__(8);
-
-class Board {
-  constructor() {
-    this.grid = this.makeGrid();
-    this.snake = new Snake();
-    this.apple = new Apple(this.randomAppleCoord());
-    this.score = 0;
-    this.inSession = true;
-  }
-
-  makeGrid() {
-    let grid = [];
-
-    for (let i = 0; i < 21; i++) {
-      for (let j = 0; j < 21; j++) {
-        grid.push([i,j])
-      }
-    }
-    return grid;
-  }
-
-  randomAppleCoord() {
-    let coord1 = Math.floor((Math.random() * 19) + 1);
-    let coord2 = Math.floor((Math.random() * 19) + 1);
-
-    //this makes sure the apple never spawns on snake coords
-    let currentSnakeCoords = this.snake.segments;
-    let conflict = false;
-
-    currentSnakeCoords.forEach(coord => {
-      if (coord[0] === coord1 && coord[1] === coord2) {
-        conflict = true;
-      }
-    });
-
-    if (conflict === false ) {
-      return [coord1, coord2];
-    } else {
-      console.log("HOOOO")
-      return this.randomAppleCoord();
-    }
-  }
-
-  snakeAppleCollision() {
-    let colliding = false;
-
-    if (this.snake.segments[0][0] === this.apple.coord[0]
-      && this.snake.segments[0][1] === this.apple.coord[1]) {
-      colliding = true;
-    }
-    return colliding;
-  }
-
-  loosingCollisions() {
-
-    //first if will detect when the snake is outside of the grid
-    //second if will detect when the snake collides with itself
-    let colliding = false;
-
-    if (this.snake.segments[0][0] < 0 || this.snake.segments[0][0] > 20
-      || this.snake.segments[0][1] < 0 || this.snake.segments[0][1] > 19) {
-      colliding = true;
-    } else if (this.snake.size > 1){
-      let snakeSegments = this.snake.segments.slice(1); // all segments except head
-      let snakeHead = this.snake.segments[0];
-
-      snakeSegments.forEach(segment => {
-        if (segment[0] === snakeHead[0] && segment[1] === snakeHead[1]) {
-          colliding = true;
-        }
-      });
-    }
-    return colliding;
-  }
-
-  newApple() {
-    this.apple = new Apple(this.randomAppleCoord());
-  }
-
-}
-
-module.exports = Board;
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Board = __webpack_require__(6);
-
-class GameView {
-  constructor($el) {
-    this.$el = $el;
-    this.board = new Board();
-    this.intervalId = window.setInterval(this.render.bind(this), 200);
-    // this.inSession = true;
-
-    $l("body").on("keydown", this.handleKeyDown.bind(this));
-
-  }
-
-  handleKeyDown(e) {
-    if (directionKeys[e.keyCode]) {
-      this.board.snake.turn(directionKeys[e.keyCode])
-    }
-  }
-
-  coordsEquate(elementCoord, snakeSegments) {
-
-    let isMatch = false;
-    snakeSegments.forEach((segment, idx) => {
-      if (segment[0] === elementCoord[0] && segment[1] === elementCoord[1]) {
-        isMatch = true;
-      }
-    });
-    return isMatch;
-  }
-
-  appleCoordsMatch(elementCoord, appleCoords) {
-    let isMatch = false;
-      if (appleCoords[0] === elementCoord[0] && appleCoords[1] === elementCoord[1]) {
-        isMatch = true;
-      }
-    return isMatch;
-  }
-
-
-  render() {
-
-    if (this.board.loosingCollisions()) {
-      this.board.inSession = false;
-      window.clearInterval(this.intervalId);
-      $l("p").html("hello")
-    }
-
-
-    if (this.board.inSession === true) {
-      $l("section").html(" ");
-
-      this.board.snake.move();
-
-      for (let i = 0; i < this.board.grid[this.board.grid.length - 1][1]; i++) {
-        $l("section").append("<ul>")
-      }
-
-      const ulListItems = () => {
-        let items = "";
-
-        for (let i = 0; i < this.board.grid[this.board.grid.length - 1][1]; i++) {
-          items += "<li>";
-        }
-        return items;
-      }
-
-      $l("ul").append(ulListItems());
-
-      let coord1 = 0 // applies to horizontal
-      let coord2 = 0; // applies to vertical
-      $l("li").elements.forEach(element => {
-        element.coord = [coord1, coord2];
-
-        if (this.coordsEquate(element.coord, this.board.snake.segments)) {
-          element.className = "snake-segment";
-          if (this.board.snake.segments[0][0] === element.coord[0]
-            && this.board.snake.segments[0][1] === element.coord[1]) {
-              element.textContent = ";)";
-          }
-        }
-
-        // element.textContent = `${coord2}`;
-
-        if (this.appleCoordsMatch(element.coord, this.board.apple.coord)) {
-          element.className = "apple";
-        }
-
-        //testing position of appleSnake collision detection
-        if (this.board.snakeAppleCollision()) {
-          this.board.newApple();
-          this.board.snake.grow();
-          this.board.score += 10;
-        }
-
-        if (coord1 + 1 > 19) {
-          coord1 = 0;
-        } else {
-          coord1 += 1;
-        }
-
-        if (coord1 === 0) {
-          coord2 += 1;
-        }
-
-      });
-
-      if (this.board.snake.size === 1) {
-        $l(".score").html("size: 1 link | score: 0")
-      } else {
-        $l(".score").html(`size: ${this.board.snake.size} links | score: ${this.board.score}`)
-      }
-    }
-  }
-
-}
-
-directionKeys = {
-  38: "up",
-  39: "right",
-  40: "down",
-  37: "left"
-};
-
-
-module.exports = GameView;
-
-
-/***/ }),
 /* 8 */
 /***/ (function(module, exports) {
 
@@ -702,4 +702,3 @@ module.exports = Apple;
 
 /***/ })
 /******/ ]);
->>>>>>> snake
