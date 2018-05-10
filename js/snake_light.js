@@ -285,10 +285,11 @@ window.$l = $l
 const Coord = __webpack_require__(4);
 
 class Snake {
-  constructor(segments){
-    this.segments = segments;
+  constructor(){
+    this.segments = [[10,10]];
     this.turning = false;
     this.direction = "up";
+    this.size = this.segments.length;
   }
 
   move() {
@@ -358,9 +359,39 @@ class Snake {
     }
   }
 
-  // grow() {
-  //   t
-  // }
+  grow() {
+
+    if (this.segments.length > 1) { //this is for when the snake is more than one link long
+      let last = this.segments[this.segments.length - 1];
+      let secondLast = this.segments[this.segments.length - 2];
+
+      if (last[0] === secondLast[0] && last[1] > secondLast[1]) {
+        this.segments.push([last[0], last[1] + 1])
+      } else if (last[0] === secondLast[0] && last[1] < secondLast[1]) {
+        this.segments.push([last[0], last[1] - 1])
+      } else if (last[0] > secondLast[0] && last[1] === secondLast[1]) {
+        this.segments.push([last[0] + 1, last[1]])
+      } else if (last[0] < secondLast[0] && last[1] === secondLast[1]) {
+        this.segments.push([last[0] - 1, last[1]])
+      }
+    } else { // this is for the when the snake is only one link lone (at the very start)
+      let segmentCoord1 = this.segments[0][0];
+      let segmentCoord2 = this.segments[0][1];
+
+
+      if (this.direction === "up") {
+        this.segments.push([segmentCoord1, segmentCoord2 + 1])
+      } else if (this.direction === "down") {
+        this.segments.push([segmentCoord1, segmentCoord2 - 1])
+      } else if (this.direction === "right") {
+        this.segments.push([segmentCoord1 - 1, segmentCoord2])
+      } else if (this.direction === "left") {
+        this.segments.push([segmentCoord1 + 1, segmentCoord2])
+      }
+    }
+
+    this.size = this.segments.length;
+  }
 
   isOpposite(newDirection, currentDirection) {
     if (newDirection === "left" && currentDirection === "right") {
@@ -445,8 +476,10 @@ const Apple = __webpack_require__(8);
 class Board {
   constructor() {
     this.grid = this.makeGrid();
+    this.snake = new Snake();
     this.apple = new Apple(this.randomAppleCoord());
-    this.snake = new Snake([[10, 10], [10,11], [10, 12], [10, 13], [10, 14]]);
+    this.score = 0;
+    this.inSession = true;
   }
 
   makeGrid() {
@@ -464,16 +497,52 @@ class Board {
     let coord1 = Math.floor((Math.random() * 19) + 1);
     let coord2 = Math.floor((Math.random() * 19) + 1);
 
-    //write code here to make sure the apple never spawns on snake coords
+    //this makes sure the apple never spawns on snake coords
+    let currentSnakeCoords = this.snake.segments;
+    let conflict = false;
 
-    return [coord1, coord2];
+    currentSnakeCoords.forEach(coord => {
+      if (coord[0] === coord1 && coord[1] === coord2) {
+        conflict = true;
+      }
+    });
+
+    if (conflict === false ) {
+      return [coord1, coord2];
+    } else {
+      console.log("HOOOO")
+      return this.randomAppleCoord();
+    }
   }
 
   snakeAppleCollision() {
     let colliding = false;
 
-    if (this.snake.segments[0][0] === this.apple.coord[0] && this.snake.segments[0][1] === this.apple.coord[1]) {
+    if (this.snake.segments[0][0] === this.apple.coord[0]
+      && this.snake.segments[0][1] === this.apple.coord[1]) {
       colliding = true;
+    }
+    return colliding;
+  }
+
+  loosingCollisions() {
+
+    //first if will detect when the snake is outside of the grid
+    //second if will detect when the snake collides with itself
+    let colliding = false;
+
+    if (this.snake.segments[0][0] < 0 || this.snake.segments[0][0] > 20
+      || this.snake.segments[0][1] < 0 || this.snake.segments[0][1] > 19) {
+      colliding = true;
+    } else if (this.snake.size > 1){
+      let snakeSegments = this.snake.segments.slice(1); // all segments except head
+      let snakeHead = this.snake.segments[0];
+
+      snakeSegments.forEach(segment => {
+        if (segment[0] === snakeHead[0] && segment[1] === snakeHead[1]) {
+          colliding = true;
+        }
+      });
     }
     return colliding;
   }
@@ -497,7 +566,8 @@ class GameView {
   constructor($el) {
     this.$el = $el;
     this.board = new Board();
-    this.intervalId = window.setInterval(this.render.bind(this), 300);
+    this.intervalId = window.setInterval(this.render.bind(this), 200);
+    // this.inSession = true;
 
     $l("body").on("keydown", this.handleKeyDown.bind(this));
 
@@ -530,62 +600,78 @@ class GameView {
 
 
   render() {
-    $l("section").html(" ");
 
-    this.board.snake.move();
-
-    for (let i = 0; i < this.board.grid[this.board.grid.length - 1][1]; i++) {
-      $l("section").append("<ul>")
+    if (this.board.loosingCollisions()) {
+      this.board.inSession = false;
+      window.clearInterval(this.intervalId);
+      $l("p").html("hello")
     }
 
-    const ulListItems = () => {
-      let items = "";
+
+    if (this.board.inSession === true) {
+      $l("section").html(" ");
+
+      this.board.snake.move();
 
       for (let i = 0; i < this.board.grid[this.board.grid.length - 1][1]; i++) {
-        items += "<li>";
+        $l("section").append("<ul>")
       }
-      return items;
-    }
 
-    $l("ul").append(ulListItems());
+      const ulListItems = () => {
+        let items = "";
 
-    let coord1 = 0 // applies to horizontal
-    let coord2 = 0; // applies to vertical
-    $l("li").elements.forEach(element => {
-      element.coord = [coord1, coord2];
-
-      if (this.coordsEquate(element.coord, this.board.snake.segments)) {
-        element.className = "snake-segment";
-        if (this.board.snake.segments[0][0] === element.coord[0]
-          && this.board.snake.segments[0][1] === element.coord[1]) {
-            element.textContent = ";)";
+        for (let i = 0; i < this.board.grid[this.board.grid.length - 1][1]; i++) {
+          items += "<li>";
         }
+        return items;
       }
 
-      // element.textContent = `${coord2}`;
+      $l("ul").append(ulListItems());
 
-      if (this.appleCoordsMatch(element.coord, this.board.apple.coord)) {
-        element.className = "apple";
-      }
+      let coord1 = 0 // applies to horizontal
+      let coord2 = 0; // applies to vertical
+      $l("li").elements.forEach(element => {
+        element.coord = [coord1, coord2];
 
-      //testing position of appleSnake collision detection
+        if (this.coordsEquate(element.coord, this.board.snake.segments)) {
+          element.className = "snake-segment";
+          if (this.board.snake.segments[0][0] === element.coord[0]
+            && this.board.snake.segments[0][1] === element.coord[1]) {
+              element.textContent = ";)";
+          }
+        }
 
-      if (this.board.snakeAppleCollision()) {
-        this.board.newApple();
-        this.board.snake.grow(); 
-      }
+        // element.textContent = `${coord2}`;
 
-      if (coord1 + 1 > 19) {
-        coord1 = 0;
+        if (this.appleCoordsMatch(element.coord, this.board.apple.coord)) {
+          element.className = "apple";
+        }
+
+        //testing position of appleSnake collision detection
+        if (this.board.snakeAppleCollision()) {
+          this.board.newApple();
+          this.board.snake.grow();
+          this.board.score += 10;
+        }
+
+        if (coord1 + 1 > 19) {
+          coord1 = 0;
+        } else {
+          coord1 += 1;
+        }
+
+        if (coord1 === 0) {
+          coord2 += 1;
+        }
+
+      });
+
+      if (this.board.snake.size === 1) {
+        $l(".score").html("size: 1 link | score: 0")
       } else {
-        coord1 += 1;
+        $l(".score").html(`size: ${this.board.snake.size} links | score: ${this.board.score}`)
       }
-
-      if (coord1 === 0) {
-        coord2 += 1;
-      }
-
-    });
+    }
   }
 
 }
