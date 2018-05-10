@@ -429,7 +429,7 @@ module.exports = Snake;
   }
 
   isOpposite() {
-    
+
   }
 
 }
