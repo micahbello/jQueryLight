@@ -9,6 +9,16 @@ class GameView {
 
     $l("body").on("keydown", this.handleKeyDown.bind(this));
 
+    $l("button").on("click", () => {
+      if (this.board.inSession === false) {
+        this.board = new Board();
+        this.intervalId = window.setInterval(this.render.bind(this), 200);
+        this.board.inSession = true;
+        //this hides the game over div while playin
+        $l(".game-over").attr("id", "hidden");
+      }
+    })
+
   }
 
   handleKeyDown(e) {
@@ -38,21 +48,22 @@ class GameView {
 
 
   render() {
-
     if (this.board.loosingCollisions()) {
       this.board.inSession = false;
       window.clearInterval(this.intervalId);
-      $l("p").html("hello")
+      //change the classname of the gameover div in order to displat it
+      $l(".game-over").attr("id", " ");
+      $l(".game-over h3").html("Game Over!");
+      $l(".game-over p").html(`Your score: ${this.board.score}`);
     }
 
-
     if (this.board.inSession === true) {
-      $l("section").html(" ");
+      $l(".snake-game").html(" ");
 
       this.board.snake.move();
 
       for (let i = 0; i < this.board.grid[this.board.grid.length - 1][1]; i++) {
-        $l("section").append("<ul>")
+        $l(".snake-game").append("<ul>")
       }
 
       const ulListItems = () => {
@@ -64,7 +75,7 @@ class GameView {
         return items;
       }
 
-      $l("ul").append(ulListItems());
+      $l(".snake-game ul").append(ulListItems());
 
       let coord1 = 0 // applies to horizontal
       let coord2 = 0; // applies to vertical
@@ -105,9 +116,9 @@ class GameView {
       });
 
       if (this.board.snake.size === 1) {
-        $l(".score").html("size: 1 link | score: 0")
+        $l(".score-div h3").html("Score: 0 <br> Size: 1 link")
       } else {
-        $l(".score").html(`size: ${this.board.snake.size} links | score: ${this.board.score}`)
+        $l(".score-div h3").html(`Score: ${this.board.score} <br> Size: ${this.board.snake.size} links`)
       }
     }
   }

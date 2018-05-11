@@ -4,5 +4,5 @@ const GameView = require("./game_view.js");
 
 
   $l(function() {
-   let board = new GameView();
+   new GameView();
   })

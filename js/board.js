@@ -38,7 +38,6 @@ class Board {
     if (conflict === false ) {
       return [coord1, coord2];
     } else {
-      console.log("HOOOO")
       return this.randomAppleCoord();
     }
   }
@@ -59,7 +58,7 @@ class Board {
     //second if will detect when the snake collides with itself
     let colliding = false;
 
-    if (this.snake.segments[0][0] < 0 || this.snake.segments[0][0] > 20
+    if (this.snake.segments[0][0] < 0 || this.snake.segments[0][0] > 19
       || this.snake.segments[0][1] < 0 || this.snake.segments[0][1] > 19) {
       colliding = true;
     } else if (this.snake.size > 1){
