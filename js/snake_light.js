@@ -363,7 +363,7 @@ class GameView {
 
       let coord1 = 0 // applies to horizontal
       let coord2 = 0; // applies to vertical
-      $l("li").elements.forEach(element => {
+      $l(".snake-game li").elements.forEach(element => {
         element.coord = [coord1, coord2];
 
         if (this.coordsEquate(element.coord, this.board.snake.segments)) {
