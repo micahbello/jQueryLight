@@ -33,6 +33,7 @@
   height: 300px;
   background: floralwhite;
   border-radius: 10px;
+  min-width: 200px;
 }
 
 .hire-me-div ul {
@@ -47,6 +48,10 @@
 
 .hire-me-div a {
   color: black;
+}
+
+.hire-me-div a:hover {
+  color: grey;
 }
 
 .middle-div {
