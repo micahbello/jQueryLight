@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     <script src="js/snake_light.js"></script>
     <title>MiQueryLight Snake</title>
-    <link rel="icon" href="./assets/cartoon-snake.jpeg">
+    <link rel="icon" href="./assets/snake-icon.jpg">
   </head>
   <body class="body">
 
@@ -21,9 +21,29 @@
       <div class="middle-div">
 
         <section class="game-over" id="hidden">
-          <h3></h3>
-          <p></p>
-          <button type="button">Play Again</button>
+          <h3>Game Over!</h3>
+          <p id="final-score"></p>
+          <p>Play Again?</p>
+          <button type="button" id="difficulty-easy">Easy</button>
+          <button type="button" id="difficulty-medium">Medium</button>
+          <button type="button" id="difficulty-hard">Hard</button>
+          <button type="button" id="difficulty-extreme">Extreme</button>
+        </section>
+
+        <section class="game-start">
+          <h3>Welcome to miQuery Snake</h3>
+          <p>Collect the red squares and grow. Avoid crossing the boundaries or hitting yourself.</p>
+
+          <p>Ready?</p>
+
+          <p>Click on a difficulty level below to start.</p>
+
+          <button type="button" id="difficulty-easy">Easy</button>
+          <button type="button" id="difficulty-medium">Medium</button>
+          <button type="button" id="difficulty-hard">Hard</button>
+          <button type="button" id="difficulty-extreme">Extreme</button>
+
+
         </section>
 
         <section class="snake-game"></section>
