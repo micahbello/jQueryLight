@@ -285,59 +285,40 @@ window.$l = $l
 const Board = __webpack_require__(4);
 
 class GameView {
-  constructor($el) {
-    this.$el = $el;
-    this.board = new Board();
-    // this.intervalId = window.setInterval(this.render.bind(this), 200);
-    // this.inSession = false;
-
-
+  constructor() {
+    this.difficulty = undefined;
 // to start of game
-    $l(".game-start button").on("click", (event) => {
+    $l("button").on("click", (event) => {
       let id = event.currentTarget.id;
 
 //this will set the difficulty level before starting the game.
       if (id === "difficulty-easy") {
+        this.board = new Board();
         this.intervalId = window.setInterval(this.render.bind(this), 300);
-        // this hides the game over div while playin
+        this.difficulty = "easy";
         $l(".game-start").attr("id", "hidden");
+        $l(".game-over").attr("id", "hidden");
       } else if (id === "difficulty-medium") {
+        this.board = new Board();
         this.intervalId = window.setInterval(this.render.bind(this), 200);
+        this.difficulty = "medium";
         $l(".game-start").attr("id", "hidden");
+        $l(".game-over").attr("id", "hidden");
       } else if (id === "difficulty-hard") {
+        this.board = new Board();
         this.intervalId = window.setInterval(this.render.bind(this), 100);
+        this.difficulty = "hard";
         $l(".game-start").attr("id", "hidden");
+        $l(".game-over").attr("id", "hidden");
       } else if (id === "difficulty-extreme") {
+        this.board = new Board();
         this.intervalId = window.setInterval(this.render.bind(this), 70);
+        this.difficulty = "extreme";
         $l(".game-start").attr("id", "hidden");
+        $l(".game-over").attr("id", "hidden");
       }
 
     });
-
-// to restart after losing
-    $l(".game-over button").on("click", (event) => {
-      let id = event.currentTarget.id;
-
-      if (id === "difficulty-easy") {
-        this.board = new Board();
-        this.intervalId = window.setInterval(this.render.bind(this), 300);
-        $l(".game-over").attr("id", "hidden");
-      } else if (id === "difficulty-medium") {
-        this.board = new Board();
-        this.intervalId = window.setInterval(this.render.bind(this), 200);
-        $l(".game-over").attr("id", "hidden");
-      } else if (id === "difficulty-hard") {
-        this.board = new Board();
-        this.intervalId = window.setInterval(this.render.bind(this), 100);
-        $l(".game-over").attr("id", "hidden");
-      } else if (id === "difficulty-extreme") {
-        this.board = new Board();
-        this.intervalId = window.setInterval(this.render.bind(this), 70);
-        $l(".game-over").attr("id", "hidden");
-      }
-
-    })
-
 
 //key controls
     $l("body").on("keydown", this.handleKeyDown.bind(this));
@@ -375,7 +356,7 @@ class GameView {
       window.clearInterval(this.intervalId);
       //change the classname of the gameover div in order to displat it
       $l(".game-over").attr("id", " ");
-      $l(".game-over p#final-score").html(`Your score: ${this.board.score}`);
+      $l(".game-over p#final-score").html(`Your score: ${this.board.score} on ${this.difficulty} difficulty`);
     }
 
     if (this.board.inSession === true) {
@@ -437,9 +418,9 @@ class GameView {
       });
 
       if (this.board.snake.size === 1) {
-        $l(".score-div h3").html("Score: 0 <br> Size: 1 link")
+        $l(".score-div h3").html(`Difficulty: ${this.difficulty} <br> Score: 0 <br> Size: 1 link`)
       } else {
-        $l(".score-div h3").html(`Score: ${this.board.score} <br> Size: ${this.board.snake.size} links`)
+        $l(".score-div h3").html(`Difficulty: ${this.difficulty} <br> Score: ${this.board.score} <br> Size: ${this.board.snake.size} links`)
       }
     }
   }
