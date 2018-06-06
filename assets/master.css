@@ -96,31 +96,50 @@
   background: #9ACD32;
 }
 
-.game-over {
+.game-over, .game-start  {
   border: 1px outset;
-  width: 325px;
-  height: 150px;
+  width: 360px;
   position:absolute;
   left: 0;
   right: 0;
   margin-left: auto;
   margin-right: auto;
   z-index: 1;
-  margin-top: 240px;
   border-radius: 20px;
   font-size: 18px;
   background: floralwhite;
 }
 
-.game-over button {
-  font-size: 13px;
+.game-over {
+  height: 190px;
+  margin-top: 210px;
+}
+
+.game-start {
+  height: 245px;
+  margin-top: 190px;
+  /* animation-name: start-window;
+  animation-duration: 4s; */
+}
+
+.game-over button, .game-start button {
+  font-size: 17px;
   cursor: pointer;
+  border-radius: 5px;
+
+}
+
+.game-over button:hover, .game-start button:hover {
+  background: lightgrey;
+  border-radius: 5px;
 }
 
 #hidden {
   display: none;
 }
 
-.footer {
+@@keyframes start-window {
+  from {background: black;}
+  to {background: green;}
 
 }
