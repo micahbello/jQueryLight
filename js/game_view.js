@@ -3,6 +3,9 @@ const Board = require("./board.js");
 class GameView {
   constructor() {
     this.difficulty = undefined;
+    this.setIntervalId;
+    this.difficulty;
+
 // to start of game
     $l("button").on("click", (event) => {
       let id = event.currentTarget.id;
@@ -67,6 +70,9 @@ class GameView {
 
 
   render() {
+
+    console.log(this.board.inSession)
+
     if (this.board.loosingCollisions()) {
       this.board.inSession = false;
       window.clearInterval(this.intervalId);
