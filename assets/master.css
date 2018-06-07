@@ -34,19 +34,41 @@
   margin-top: -20px;
 }
 
+.left-div {
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.controls {
+  border: 1px outset;
+  width: 200px;
+  height: 170px;
+  background: #e6e6e6;
+  border-radius: 10px;
+  animation-name: controls-window;
+  animation-duration: 1.2s;
+  animation-timing-function: ease-out;
+}
+
+
 .score-div {
   border: 1px outset;
-  display: flex;
-  justify-content: center;
+  /* display: flex;
+  justify-content: center; */
   align-items: center;
   width: 200px;
-  height: 125px;
+  height: 135px;
   background: #e6e6e6;
   border-radius: 10px;
   animation-name: score-window;
   animation-duration: 1.2s;
   animation-timing-function: ease-out;
+}
 
+.score-div p {
+  margin: 2px;
 }
 
 .hire-me-div {
@@ -162,6 +184,18 @@
   border-radius: 5px;
 }
 
+.fas.fa-pause.fa-9x {
+  position:absolute;
+  top: 330px;
+  left: 0;
+  right: 0;
+}
+
+.play-pause {
+  float: left;
+  margin-top: 26px;
+}
+
 #hidden {
   display: none;
 }
@@ -170,7 +204,6 @@
   0% {transform: translateY(-500px);}
   50% {transform: translateY(50px);}
   100% {transform: translateY(0px);}
-
 }
 
 @keyframes hire-me-window {
@@ -181,6 +214,12 @@
 
 @keyframes score-window {
   0% {transform: translateY(500px);}
-  50% {transform: translateY(-50px);}
+  50% {transform: translateY(-20px);}
+  100% {transform: translateY(0px);}
+}
+
+@keyframes controls-window {
+  0% {transform: translateY(-500px);}
+  50% {transform: translateY(20px);}
   100% {transform: translateY(0px);}
 }

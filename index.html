@@ -14,11 +14,40 @@
 
     <div class="main-content">
 
-      <div class="score-div">
-        <h3>Score: 0 <br> Size: 1 link</h3>
+
+      <div class="left-div">
+
+        <div class="controls">
+          <h3>Controls</h3>
+
+          <p>Press <i>SPACEBAR</i> to <i class="fas fa-pause"></i></p>
+          <p>Move:</p>
+          <i class="fas fa-arrow-alt-circle-left fa-2x"></i>
+          <i class="fas fa-arrow-alt-circle-right fa-2x"></i>
+          <i class="fas fa-arrow-alt-circle-up fa-2x"></i>
+          <i class="fas fa-arrow-alt-circle-down fa-2x"></i>
+        </div>
+
+        <div class="score-div">
+          <h3>Score</h3>
+
+          <p id="points">Points: 0</p>
+          <p id="length">Snake length: 1 link</p>
+          <p id="difficulty">Difficulty: </p>
+        </div>
+
       </div>
 
       <div class="middle-div">
+
+        <div class="play-pause">
+          <i class="fas fa-play top" id="hidden"></i>
+          <i class="fas fa-pause top" id="hidden"></i>
+        </div>
+
+
+
+        <!-- <i class="fas fa-pause fa-9x" id=hidden></i> -->
 
         <section class="game-over" id="hidden">
           <h3>Game Over!</h3>

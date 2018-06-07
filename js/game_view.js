@@ -5,33 +5,50 @@ class GameView {
     this.difficulty = undefined;
     this.setIntervalId;
     this.difficulty;
+    this.inSession;
 
-// to start of game
+// to start of game and restart game
     $l("button").on("click", (event) => {
       let id = event.currentTarget.id;
 
 //this will set the difficulty level before starting the game.
       if (id === "difficulty-easy") {
         this.board = new Board();
+        this.inSession = true;
         this.intervalId = window.setInterval(this.render.bind(this), 300);
+        $l(".fas.fa-pause.fa-9x").attr("id", "hidden");
+        $l(".fas.fa-play.top").attr("id", " ");
+        $l(".fas.fa-pause.top").attr("id", "hidden");
         this.difficulty = "easy";
         $l(".game-start").attr("id", "hidden");
         $l(".game-over").attr("id", "hidden");
       } else if (id === "difficulty-medium") {
         this.board = new Board();
+        this.inSession = true;
         this.intervalId = window.setInterval(this.render.bind(this), 200);
+        $l(".fas.fa-pause.fa-9x").attr("id", "hidden");
+        $l(".fas.fa-play.top").attr("id", " ");
+        $l(".fas.fa-pause.top").attr("id", "hidden");
         this.difficulty = "medium";
         $l(".game-start").attr("id", "hidden");
         $l(".game-over").attr("id", "hidden");
       } else if (id === "difficulty-hard") {
         this.board = new Board();
+        this.inSession = true;
         this.intervalId = window.setInterval(this.render.bind(this), 100);
+        $l(".fas.fa-pause.fa-9x").attr("id", "hidden");
+        $l(".fas.fa-play.top").attr("id", " ");
+        $l(".fas.fa-pause.top").attr("id", "hidden");
         this.difficulty = "hard";
         $l(".game-start").attr("id", "hidden");
         $l(".game-over").attr("id", "hidden");
       } else if (id === "difficulty-extreme") {
         this.board = new Board();
+        this.inSession = true;
         this.intervalId = window.setInterval(this.render.bind(this), 70);
+        $l(".fas.fa-pause.fa-9x").attr("id", "hidden");
+        $l(".fas.fa-play.top").attr("id", " ");
+        $l(".fas.fa-pause.top").attr("id", "hidden");
         this.difficulty = "extreme";
         $l(".game-start").attr("id", "hidden");
         $l(".game-over").attr("id", "hidden");
@@ -44,8 +61,20 @@ class GameView {
   }
 
   handleKeyDown(e) {
+
+    //directions and well as pausing and unpausing the game
     if (directionKeys[e.keyCode]) {
       this.board.snake.turn(directionKeys[e.keyCode])
+    } else if (e.keyCode === 32 && this.inSession === true) {
+      this.inSession = false;
+      $l(".fas.fa-pause.fa-9x").attr("id", " ");
+      $l(".fas.fa-play.top").attr("id", "hidden");
+      $l(".fas.fa-pause.top").attr("id", " ");
+    } else if (e.keyCode === 32 && this.inSession === false) {
+      this.inSession = true;
+      $l(".fas.fa-pause.fa-9x").attr("id", "hidden");
+      $l(".fas.fa-play.top").attr("id", " ");
+      $l(".fas.fa-pause.top").attr("id", "hidden");
     }
   }
 
@@ -70,18 +99,17 @@ class GameView {
 
 
   render() {
-
-    console.log(this.board.inSession)
-
     if (this.board.loosingCollisions()) {
-      this.board.inSession = false;
+      this.inSession = undefined;
       window.clearInterval(this.intervalId);
       //change the classname of the gameover div in order to displat it
       $l(".game-over").attr("id", " ");
       $l(".game-over p#final-score").html(`Your score: ${this.board.score} on ${this.difficulty} difficulty`);
+      $l(".fas.fa-pause.top").attr("id", "hidden");
+      $l(".fas.fa-play.top").attr("id", "hidden");
     }
 
-    if (this.board.inSession === true) {
+    if (this.inSession === true) {
       $l(".snake-game").html(" ");
 
       this.board.snake.move();
@@ -140,9 +168,13 @@ class GameView {
       });
 
       if (this.board.snake.size === 1) {
-        $l(".score-div h3").html(`Difficulty: ${this.difficulty} <br> Score: 0 <br> Size: 1 link`)
+        $l("#points").html("Points: 0");
+        $l("#length").html("Snake length: 1 link");
+        $l("#difficulty").html(`Difficulty: ${this.difficulty}`);
       } else {
-        $l(".score-div h3").html(`Difficulty: ${this.difficulty} <br> Score: ${this.board.score} <br> Size: ${this.board.snake.size} links`)
+        $l("#points").html(`Points: ${this.board.score}`);
+        $l("#length").html(`Snake length: ${this.board.snake.size} links`);
+        $l("#difficulty").html(`Difficulty: ${this.difficulty}`);
       }
     }
   }
@@ -155,6 +187,7 @@ directionKeys = {
   40: "down",
   37: "left"
 };
+
 
 
 module.exports = GameView;

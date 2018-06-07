@@ -7,7 +7,6 @@ class Board {
     this.snake = new Snake();
     this.apple = new Apple(this.randomAppleCoord());
     this.score = 0;
-    this.inSession = true;
   }
 
   makeGrid() {
