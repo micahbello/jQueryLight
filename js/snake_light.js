@@ -228,6 +228,7 @@ const GameView = __webpack_require__(3);
 
   $l(function() {
    new GameView();
+   console.log("Like what you see? Hire me- Miqueas Bello")
   })
 
 
@@ -291,26 +292,32 @@ class GameView {
     this.difficulty;
     this.inSession;
 
+    // this.render = this.render.bind(this);
+    // this.intervalId = this.intervalId.bind(this);
+
 // to start of game and restart game
     $l("button").on("click", (event) => {
       let id = event.currentTarget.id;
 
 //this will set the difficulty level before starting the game.
       if (id === "difficulty-easy") {
-        this.board = new Board();
-        this.inSession = true;
-        this.intervalId = window.setInterval(this.render.bind(this), 300);
-        $l(".fas.fa-pause.fa-9x").attr("id", "hidden");
-        $l(".fas.fa-play.top").attr("id", " ");
-        $l(".fas.fa-pause.top").attr("id", "hidden");
-        this.difficulty = "easy";
-        $l(".game-start").attr("id", "hidden");
-        $l(".game-over").attr("id", "hidden");
+
+        $l(".snake-emoji").attr("id", "snake-leave");
+        // setTimeout(function(){
+          this.board = new Board();
+          this.inSession = true;
+          this.intervalId = window.setInterval(this.render.bind(this), 300);
+          $l(".fas.fa-play.top").attr("id", " ");
+          $l(".fas.fa-pause.top").attr("id", "hidden");
+          this.difficulty = "easy";
+          $l(".snake-emoji").attr("id", " ")
+          $l(".game-start").attr("id", "hidden");
+          $l(".game-over").attr("id", "hidden");
+        // }, 2000);
       } else if (id === "difficulty-medium") {
         this.board = new Board();
         this.inSession = true;
         this.intervalId = window.setInterval(this.render.bind(this), 200);
-        $l(".fas.fa-pause.fa-9x").attr("id", "hidden");
         $l(".fas.fa-play.top").attr("id", " ");
         $l(".fas.fa-pause.top").attr("id", "hidden");
         this.difficulty = "medium";
@@ -320,7 +327,6 @@ class GameView {
         this.board = new Board();
         this.inSession = true;
         this.intervalId = window.setInterval(this.render.bind(this), 100);
-        $l(".fas.fa-pause.fa-9x").attr("id", "hidden");
         $l(".fas.fa-play.top").attr("id", " ");
         $l(".fas.fa-pause.top").attr("id", "hidden");
         this.difficulty = "hard";
@@ -330,7 +336,6 @@ class GameView {
         this.board = new Board();
         this.inSession = true;
         this.intervalId = window.setInterval(this.render.bind(this), 70);
-        $l(".fas.fa-pause.fa-9x").attr("id", "hidden");
         $l(".fas.fa-play.top").attr("id", " ");
         $l(".fas.fa-pause.top").attr("id", "hidden");
         this.difficulty = "extreme";
@@ -351,12 +356,10 @@ class GameView {
       this.board.snake.turn(directionKeys[e.keyCode])
     } else if (e.keyCode === 32 && this.inSession === true) {
       this.inSession = false;
-      $l(".fas.fa-pause.fa-9x").attr("id", " ");
       $l(".fas.fa-play.top").attr("id", "hidden");
       $l(".fas.fa-pause.top").attr("id", " ");
     } else if (e.keyCode === 32 && this.inSession === false) {
       this.inSession = true;
-      $l(".fas.fa-pause.fa-9x").attr("id", "hidden");
       $l(".fas.fa-play.top").attr("id", " ");
       $l(".fas.fa-pause.top").attr("id", "hidden");
     }
@@ -388,7 +391,7 @@ class GameView {
       window.clearInterval(this.intervalId);
       //change the classname of the gameover div in order to displat it
       $l(".game-over").attr("id", " ");
-      $l(".game-over p#final-score").html(`Your score: ${this.board.score} on ${this.difficulty} difficulty`);
+      $l(".game-over p#final-score").html(`Your scored <b> ${this.board.score} points </b> on <b> ${this.difficulty} difficulty </b>`);
       $l(".fas.fa-pause.top").attr("id", "hidden");
       $l(".fas.fa-play.top").attr("id", "hidden");
     }

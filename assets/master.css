@@ -52,7 +52,6 @@
   animation-timing-function: ease-out;
 }
 
-
 .score-div {
   border: 1px outset;
   /* display: flex;
@@ -147,7 +146,7 @@
 
 .game-over, .game-start  {
   border: 1px outset;
-  width: 360px;
+  width: 370px;
   position:absolute;
   left: 0;
   right: 0;
@@ -160,35 +159,39 @@
 }
 
 .game-over {
-  height: 190px;
-  margin-top: 195px;
+  height: 250px;
+  margin-top: 170px;
 }
 
 .game-start {
-  height: 245px;
-  margin-top: 165px;
+  height: 310px;
+  margin-top: 145px;
   animation-name: start-window;
-  animation-duration: 1.2s;
+  animation-duration: 1s;
   animation-timing-function: ease-out;
+}
+
+.game-start img, .game-over img {
+  width: 36px;
+}
+
+.game-start img {
+  animation-name: snake-emoji;
+  animation-delay: .3s;
+  animation-duration: 2s;
+  animation-fill-mode: backwards;
+  animation-timing-function: ease-in;
 }
 
 .game-over button, .game-start button {
   font-size: 17px;
   cursor: pointer;
   border-radius: 5px;
-
 }
 
 .game-over button:hover, .game-start button:hover {
   background: lightgrey;
   border-radius: 5px;
-}
-
-.fas.fa-pause.fa-9x {
-  position:absolute;
-  top: 330px;
-  left: 0;
-  right: 0;
 }
 
 .play-pause {
@@ -198,6 +201,11 @@
 
 #hidden {
   display: none;
+}
+
+#snake-leave {
+  animation-name: snake-emoji-exit;
+  animation-duration: 2s;
 }
 
 @keyframes start-window {
@@ -222,4 +230,16 @@
   0% {transform: translateY(-500px);}
   50% {transform: translateY(20px);}
   100% {transform: translateY(0px);}
+}
+
+@keyframes snake-emoji {
+  0% {transform: translateX(1000px);}
+  50% {transform: translateX(-50px);}
+  100% {transform: translateX(0px);}
+}
+
+@keyframes snake-emoji-exit {
+  0% {transform: translateX(0px);}
+  50% {transform: translateX(50px);}
+  100% {transform: translateX(-1000px);}
 }

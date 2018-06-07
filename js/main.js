@@ -5,4 +5,5 @@ const GameView = require("./game_view.js");
 
   $l(function() {
    new GameView();
+   console.log("Like what you see? Hire me- Miqueas Bello")
   })
