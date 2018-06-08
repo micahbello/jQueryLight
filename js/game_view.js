@@ -3,59 +3,122 @@ const Board = require("./board.js");
 class GameView {
   constructor() {
     this.difficulty = undefined;
-    this.setIntervalId;
+    this.intervalId;
     this.difficulty;
     this.inSession;
 
-    // this.render = this.render.bind(this);
-    // this.intervalId = this.intervalId.bind(this);
+    this.render = this.render.bind(this);
 
 // to start of game and restart game
     $l("button").on("click", (event) => {
-      let id = event.currentTarget.id;
 
+      let id = event.currentTarget.id;
 //this will set the difficulty level before starting the game.
       if (id === "difficulty-easy") {
-
         $l(".snake-emoji").attr("id", "snake-leave");
-        // setTimeout(function(){
-          this.board = new Board();
-          this.inSession = true;
-          this.intervalId = window.setInterval(this.render.bind(this), 300);
+
+        let gameOverDiv = $l(".game-over");
+
+        if (gameOverDiv.elements[0].id === "hidden") {
+          $l(".game-start").attr("id", "window-exit");
+        } else {
+          $l(".game-over").attr("id", "window-exit");
+        }
+
+        const thing = this;
+        setTimeout(function(){
+          thing.board = new Board();
+          thing.inSession = true;
+          thing.intervalId = window.setInterval(thing.render, 300);
           $l(".fas.fa-play.top").attr("id", " ");
           $l(".fas.fa-pause.top").attr("id", "hidden");
-          this.difficulty = "easy";
+          thing.difficulty = "easy";
           $l(".snake-emoji").attr("id", " ")
           $l(".game-start").attr("id", "hidden");
           $l(".game-over").attr("id", "hidden");
-        // }, 2000);
+        }, 3000);
+
       } else if (id === "difficulty-medium") {
-        this.board = new Board();
-        this.inSession = true;
-        this.intervalId = window.setInterval(this.render.bind(this), 200);
-        $l(".fas.fa-play.top").attr("id", " ");
-        $l(".fas.fa-pause.top").attr("id", "hidden");
-        this.difficulty = "medium";
-        $l(".game-start").attr("id", "hidden");
-        $l(".game-over").attr("id", "hidden");
+        $l(".snake-emoji").attr("id", "snake-leave");
+
+        let gameOverDiv = $l(".game-over");
+
+        if (gameOverDiv.elements[0].id === "hidden") {
+          $l(".game-start").attr("id", "window-exit");
+        } else {
+          $l(".game-over").attr("id", "window-exit");
+        }
+
+        const thing = this;
+        setTimeout(function(){
+          thing.board = new Board();
+          thing.inSession = true;
+
+          thing.intervalId = window.setInterval(thing.render, 200);
+          console.log(thing)
+
+          $l(".fas.fa-play.top").attr("id", " ");
+          $l(".fas.fa-pause.top").attr("id", "hidden");
+          thing.difficulty = "easy";
+          // console.log(this.difficulty)
+          $l(".snake-emoji").attr("id", " ")
+          $l(".game-start").attr("id", "hidden");
+          $l(".game-over").attr("id", "hidden");
+        }, 3000);
       } else if (id === "difficulty-hard") {
-        this.board = new Board();
-        this.inSession = true;
-        this.intervalId = window.setInterval(this.render.bind(this), 100);
-        $l(".fas.fa-play.top").attr("id", " ");
-        $l(".fas.fa-pause.top").attr("id", "hidden");
-        this.difficulty = "hard";
-        $l(".game-start").attr("id", "hidden");
-        $l(".game-over").attr("id", "hidden");
+        $l(".snake-emoji").attr("id", "snake-leave");
+
+        let gameOverDiv = $l(".game-over");
+
+        if (gameOverDiv.elements[0].id === "hidden") {
+          $l(".game-start").attr("id", "window-exit");
+        } else {
+          $l(".game-over").attr("id", "window-exit");
+        }
+
+        const thing = this;
+        setTimeout(function(){
+          thing.board = new Board();
+          thing.inSession = true;
+
+          thing.intervalId = window.setInterval(thing.render, 100);
+          console.log(thing)
+
+          $l(".fas.fa-play.top").attr("id", " ");
+          $l(".fas.fa-pause.top").attr("id", "hidden");
+          thing.difficulty = "easy";
+          // console.log(this.difficulty)
+          $l(".snake-emoji").attr("id", " ")
+          $l(".game-start").attr("id", "hidden");
+          $l(".game-over").attr("id", "hidden");
+        }, 3000);
       } else if (id === "difficulty-extreme") {
-        this.board = new Board();
-        this.inSession = true;
-        this.intervalId = window.setInterval(this.render.bind(this), 70);
-        $l(".fas.fa-play.top").attr("id", " ");
-        $l(".fas.fa-pause.top").attr("id", "hidden");
-        this.difficulty = "extreme";
-        $l(".game-start").attr("id", "hidden");
-        $l(".game-over").attr("id", "hidden");
+        $l(".snake-emoji").attr("id", "snake-leave");
+
+        let gameOverDiv = $l(".game-over");
+
+        if (gameOverDiv.elements[0].id === "hidden") {
+          $l(".game-start").attr("id", "window-exit");
+        } else {
+          $l(".game-over").attr("id", "window-exit");
+        }
+
+        const thing = this;
+        setTimeout(function(){
+          thing.board = new Board();
+          thing.inSession = true;
+
+          thing.intervalId = window.setInterval(thing.render, 70);
+          console.log(thing)
+
+          $l(".fas.fa-play.top").attr("id", " ");
+          $l(".fas.fa-pause.top").attr("id", "hidden");
+          thing.difficulty = "easy";
+          // console.log(this.difficulty)
+          $l(".snake-emoji").attr("id", " ")
+          $l(".game-start").attr("id", "hidden");
+          $l(".game-over").attr("id", "hidden");
+        }, 3000);
       }
 
     });
@@ -98,7 +161,6 @@ class GameView {
       }
     return isMatch;
   }
-
 
   render() {
     if (this.board.loosingCollisions()) {
