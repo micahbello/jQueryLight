@@ -1,0 +1,90 @@
+.apple {
+  /* background: red; */
+  background-image: url(./snake-sprite.png);
+  background-size: 121px;
+  background-position-y: -73px;
+}
+
+.snake-segment {
+  background: #9ACD32;
+}
+
+.snake-head-up {
+  background-image: url(./snake-sprite.png);
+  background-size: 125px;
+  background-position-x: -75px;
+}
+
+.snake-head-down {
+  background-image: url(./snake-sprite.png);
+  background-size: 125px;
+  background-position-x: -100px;
+  background-position-y: -25px;
+
+}
+
+.snake-head-right {
+  background-image: url(./snake-sprite.png);
+  background-size: 125px;
+  background-position-x: -100px;
+}
+
+.snake-head-left {
+  background-image: url(./snake-sprite.png);
+  background-size: 125px;
+  background-position-x: -75px;
+  background-position-y: -25px;
+}
+
+.snake-tail-up {
+  background-image: url(./snake-sprite.png);
+  background-size: 125px;
+  background-position-x: -200px;
+  background-position-y: -50px;
+}
+
+.snake-tail-down {
+  background-image: url(./snake-sprite.png);
+  background-size: 125px;
+  background-position-x: -225px;
+  background-position-y: -75px;
+}
+
+.snake-tail-right {
+  background-image: url(./snake-sprite.png);
+  background-size: 125px;
+  background-position-x: -225px;
+  background-position-y: -50px;
+}
+
+.snake-tail-left {
+  background-image: url(./snake-sprite.png);
+  background-size: 125px;
+  background-position-x: -200px;
+  background-position-y: -75px;
+}
+
+.snake-body-straight-horizontal {
+  background-image: url(./snake-sprite.png);
+  background-size: 125px;
+  background-position-x: -175px;
+  background-position-y: -125px;
+}
+
+.snake-body-straight-vertical {
+  background-image: url(./snake-sprite.png);
+  background-size: 125px;
+  background-position-x: -150px;
+  background-position-y: -100px;
+}
+
+.snake-body-turning-left-from-up {
+  background-image: url(./snake-sprite.png);
+  background-size: 125px;
+  background-position-x: -175px;
+  background-position-y: -100px;
+}
+
+.turning {
+  background: red;
+}

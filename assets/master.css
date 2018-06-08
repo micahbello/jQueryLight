@@ -131,17 +131,6 @@
   /* background: grey; */
 }
 
-.apple {
-  /* background: red; */
-  background-image: url(./snake-sprite.png);
-  background-size: 121px;
-  background-position-y: -73px;
-}
-
-.snake-segment {
-  background: #9ACD32;
-}
-
 .game-over, .game-start  {
   border: 1px outset;
   width: 370px;

@@ -88,12 +88,15 @@ class GameView {
   }
 
 //this method tests to see which coords on grid the snake is on
+//this tests every snake segment against one particular li of the grid given
   coordsEquate(elementCoord, snakeSegments) {
 
     let isMatch = false;
     snakeSegments.forEach((segment, idx) => {
       if (segment[0] === elementCoord[0] && segment[1] === elementCoord[1]) {
-        isMatch = true;
+        //if the elementcoords and the snake segment matches, it will return the
+        //sprite name that was determined for that segment
+        isMatch = segment[4];
       }
     });
     return isMatch;
@@ -109,13 +112,11 @@ class GameView {
 
   render() {
 
+    console.log(this.board.snake.segments[this.board.snake.segments.length - 1][2]);
+
     if (this.board.score > 0 && this.board.score % 10 === 0) {
       $l(".snake-emoji-runner").attr("id", "snake-run");
     }
-
-    // window.setTimeout(function() {
-    //   $l(".snake-emoji-runner").attr("id", "hidden");
-    // }, 4000);
 
     if (this.board.loosingCollisions()) {
       this.inSession = undefined;
@@ -162,17 +163,18 @@ class GameView {
 
       let coord1 = 0 // applies to horizontal
       let coord2 = 0; // applies to vertical
+
       $l(".snake-game li").elements.forEach(element => {
         element.coord = [coord1, coord2];
 
         //now render the snake segments as css snake-segment class
-        if (this.coordsEquate(element.coord, this.board.snake.segments)) {
-          element.className = "snake-segment";
-          //this silly code here make the head have a winky face
-          if (this.board.snake.segments[0][0] === element.coord[0]
-            && this.board.snake.segments[0][1] === element.coord[1]) {
-              element.textContent = ";)";
-          }
+        //test to see if the element is a snake segment
+        let snakeSegmentSpriteName = this.coordsEquate(element.coord, this.board.snake.segments);
+
+        if (snakeSegmentSpriteName != false) {
+          //if the function returns with a direction and positio, set that element.className to that
+          //snake sprite
+          element.className = snakeSegmentSpriteName;
         }
 
         // element.textContent = `${coord2}`;
