@@ -87,6 +87,7 @@ class GameView {
     }
   }
 
+//this method tests to see which coords on grid the snake is on
   coordsEquate(elementCoord, snakeSegments) {
 
     let isMatch = false;
@@ -107,6 +108,14 @@ class GameView {
   }
 
   render() {
+
+    if (this.board.score > 0 && this.board.score % 10 === 0) {
+      $l(".snake-emoji-runner").attr("id", "snake-run");
+    }
+
+    // window.setTimeout(function() {
+    //   $l(".snake-emoji-runner").attr("id", "hidden");
+    // }, 4000);
 
     if (this.board.loosingCollisions()) {
       this.inSession = undefined;
@@ -156,8 +165,10 @@ class GameView {
       $l(".snake-game li").elements.forEach(element => {
         element.coord = [coord1, coord2];
 
+        //now render the snake segments as css snake-segment class
         if (this.coordsEquate(element.coord, this.board.snake.segments)) {
           element.className = "snake-segment";
+          //this silly code here make the head have a winky face
           if (this.board.snake.segments[0][0] === element.coord[0]
             && this.board.snake.segments[0][1] === element.coord[1]) {
               element.textContent = ";)";

@@ -70,6 +70,11 @@ class Snake {
   turn(newDirection) {
     if (this.isOpposite(newDirection, this.direction) === false && !this.turning) {
       this.direction = newDirection;
+      //this will assign the new direction to the snake head so that it can be passed down
+      //and the proper sprite can be rendered for each segment. This happens based on the
+      //direction of the segment and it place in the segments array. The direction will be third
+      //element in the segment array of segment in the array- so each segment is like the following-
+      //[coord, coord, direction]
       this.turning = true;
     }
   }
@@ -81,15 +86,15 @@ class Snake {
       let secondLast = this.segments[this.segments.length - 2];
 
       if (last[0] === secondLast[0] && last[1] > secondLast[1]) {
-        this.segments.push([last[0], last[1] + 1])
+        this.segments.push([last[0], last[1] + 1]);
       } else if (last[0] === secondLast[0] && last[1] < secondLast[1]) {
-        this.segments.push([last[0], last[1] - 1])
+        this.segments.push([last[0], last[1] - 1]);
       } else if (last[0] > secondLast[0] && last[1] === secondLast[1]) {
-        this.segments.push([last[0] + 1, last[1]])
+        this.segments.push([last[0] + 1, last[1]]);
       } else if (last[0] < secondLast[0] && last[1] === secondLast[1]) {
-        this.segments.push([last[0] - 1, last[1]])
+        this.segments.push([last[0] - 1, last[1]]);
       }
-    } else { // this is for the when the snake is only one link lone (at the very start)
+    } else { // this is for the when the snake is only one link (at the very start)
       let segmentCoord1 = this.segments[0][0];
       let segmentCoord2 = this.segments[0][1];
 
