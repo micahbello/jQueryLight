@@ -107,6 +107,10 @@ class DOMNodeCollection {
       }
   }
 
+  css(propertyName, value) {
+    this.elements[0].style[propertyName] = value;
+  }
+
   addClass(classNames) {
     this.elements.forEach(element => {
       if (element.classList.length === 0) {

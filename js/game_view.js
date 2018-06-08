@@ -11,135 +11,79 @@ class GameView {
 
 // to start of game and restart game
     $l("button").on("click", (event) => {
-
-      let id = event.currentTarget.id;
-//this will set the difficulty level before starting the game.
-      if (id === "difficulty-easy") {
-        $l(".snake-emoji").attr("id", "snake-leave");
-
-        let gameOverDiv = $l(".game-over");
-
-        if (gameOverDiv.elements[0].id === "hidden") {
-          $l(".game-start").attr("id", "window-exit");
-        } else {
-          $l(".game-over").attr("id", "window-exit");
-        }
-
-        const thing = this;
-        setTimeout(function(){
-          thing.board = new Board();
-          thing.inSession = true;
-          thing.intervalId = window.setInterval(thing.render, 300);
-          $l(".fas.fa-play.top").attr("id", " ");
-          $l(".fas.fa-pause.top").attr("id", "hidden");
-          thing.difficulty = "easy";
-          $l(".snake-emoji").attr("id", " ")
-          $l(".game-start").attr("id", "hidden");
-          $l(".game-over").attr("id", "hidden");
-        }, 3000);
-
-      } else if (id === "difficulty-medium") {
-        $l(".snake-emoji").attr("id", "snake-leave");
-
-        let gameOverDiv = $l(".game-over");
-
-        if (gameOverDiv.elements[0].id === "hidden") {
-          $l(".game-start").attr("id", "window-exit");
-        } else {
-          $l(".game-over").attr("id", "window-exit");
-        }
-
-        const thing = this;
-        setTimeout(function(){
-          thing.board = new Board();
-          thing.inSession = true;
-
-          thing.intervalId = window.setInterval(thing.render, 200);
-          console.log(thing)
-
-          $l(".fas.fa-play.top").attr("id", " ");
-          $l(".fas.fa-pause.top").attr("id", "hidden");
-          thing.difficulty = "easy";
-          // console.log(this.difficulty)
-          $l(".snake-emoji").attr("id", " ")
-          $l(".game-start").attr("id", "hidden");
-          $l(".game-over").attr("id", "hidden");
-        }, 3000);
-      } else if (id === "difficulty-hard") {
-        $l(".snake-emoji").attr("id", "snake-leave");
-
-        let gameOverDiv = $l(".game-over");
-
-        if (gameOverDiv.elements[0].id === "hidden") {
-          $l(".game-start").attr("id", "window-exit");
-        } else {
-          $l(".game-over").attr("id", "window-exit");
-        }
-
-        const thing = this;
-        setTimeout(function(){
-          thing.board = new Board();
-          thing.inSession = true;
-
-          thing.intervalId = window.setInterval(thing.render, 100);
-          console.log(thing)
-
-          $l(".fas.fa-play.top").attr("id", " ");
-          $l(".fas.fa-pause.top").attr("id", "hidden");
-          thing.difficulty = "easy";
-          // console.log(this.difficulty)
-          $l(".snake-emoji").attr("id", " ")
-          $l(".game-start").attr("id", "hidden");
-          $l(".game-over").attr("id", "hidden");
-        }, 3000);
-      } else if (id === "difficulty-extreme") {
-        $l(".snake-emoji").attr("id", "snake-leave");
-
-        let gameOverDiv = $l(".game-over");
-
-        if (gameOverDiv.elements[0].id === "hidden") {
-          $l(".game-start").attr("id", "window-exit");
-        } else {
-          $l(".game-over").attr("id", "window-exit");
-        }
-
-        const thing = this;
-        setTimeout(function(){
-          thing.board = new Board();
-          thing.inSession = true;
-
-          thing.intervalId = window.setInterval(thing.render, 70);
-          console.log(thing)
-
-          $l(".fas.fa-play.top").attr("id", " ");
-          $l(".fas.fa-pause.top").attr("id", "hidden");
-          thing.difficulty = "easy";
-          // console.log(this.difficulty)
-          $l(".snake-emoji").attr("id", " ")
-          $l(".game-start").attr("id", "hidden");
-          $l(".game-over").attr("id", "hidden");
-        }, 3000);
+      if (this.inSession != "animating") {
+        let id = event.currentTarget.id;
+        //calls on method to start the session
+        this.startSession(id);
       }
-
     });
 
 //key controls
     $l("body").on("keydown", this.handleKeyDown.bind(this));
   }
 
-  handleKeyDown(e) {
+  startSession(difficultyLevel) {
+    //to ensure the buttons cannot be repressed until the animations are over
+    this.inSession = "animating";
+    //changes the snake-emoji css id so that it can animate away
+    $l(".snake-emoji").attr("id", "snake-leave");
+    //check to see which window is curently up- start game or game over
+    let gameOverDiv = $l(".game-over");
+    //chnages the css id of which over window is up to animate it out
+    if (gameOverDiv.elements[0].id === "hidden") {
+      $l(".game-start").attr("id", "window-exit");
+    } else {
+      $l(".game-over").attr("id", "window-exit");
+    }
+    //set thing to this to have access to GameView inside the setTimeout method
+    const thing = this;
+    //makes sure the game starts 3 seconds later, giving enough time for above animations to occur
+    window.setTimeout(function(){
 
+      thing.board = new Board();
+      //sets the speed accroding to the difficulty chosen
+      thing.intervalId = window.setInterval(thing.render, timeIntervals[difficultyLevel]);
+      //makes the play button appear atop the grid area
+      $l(".fas.fa-play.top").attr("id", " ");
+      $l(".fas.fa-pause.top").attr("id", "hidden");
+      //method to set the difficulty from the css id of the clicked button
+
+        function difficultyFromId(difficultyLevel) {
+          let array = Array.from(difficultyLevel);
+          //will cut off "difficulty-" from id
+          let level = array.slice(11);
+          return level.join("");
+        }
+
+      thing.difficulty = difficultyFromId(difficultyLevel);
+      //resets the css ids of elements below
+      $l(".snake-emoji").attr("id", " ")
+      $l(".game-start").attr("id", "hidden");
+      $l(".game-over").attr("id", "hidden");
+      $l(".fas.fa-pause.side").attr("id", " ");
+      $l(".fas.fa-pause.play").attr("id", "hidden");
+      $l(".snake-game").attr("id", " ");
+      thing.inSession = true;
+    }, 3000)
+
+  }
+
+  handleKeyDown(e) {
     //directions and well as pausing and unpausing the game
-    if (directionKeys[e.keyCode]) {
+    if (directionKeys[e.keyCode] && this.inSession === true) {
       this.board.snake.turn(directionKeys[e.keyCode])
     } else if (e.keyCode === 32 && this.inSession === true) {
       this.inSession = false;
       $l(".fas.fa-play.top").attr("id", "hidden");
+      $l(".fas.fa-play.side").attr("id", " ");
       $l(".fas.fa-pause.top").attr("id", " ");
+      $l(".fas.fa-pause.side").attr("id", "hidden");
     } else if (e.keyCode === 32 && this.inSession === false) {
       this.inSession = true;
       $l(".fas.fa-play.top").attr("id", " ");
+      $l(".fas.fa-play.side").attr("id", "hidden");
       $l(".fas.fa-pause.top").attr("id", "hidden");
+      $l(".fas.fa-pause.side").attr("id", " ");
     }
   }
 
@@ -163,14 +107,28 @@ class GameView {
   }
 
   render() {
+
     if (this.board.loosingCollisions()) {
       this.inSession = undefined;
       window.clearInterval(this.intervalId);
-      //change the classname of the gameover div in order to displat it
-      $l(".game-over").attr("id", " ");
-      $l(".game-over p#final-score").html(`Your scored <b> ${this.board.score} points </b> on <b> ${this.difficulty} difficulty </b>`);
-      $l(".fas.fa-pause.top").attr("id", "hidden");
+
+      //this is so the grid rotates upon losing
+      $l(".snake-game").attr("id", "rotate");
       $l(".fas.fa-play.top").attr("id", "hidden");
+      this.board.snake.direction = "none";
+
+      //change the classname of the gameover div in order to display it
+      //allows for above animation to take place before displaying the game over window
+
+      let thing = this;
+
+      window.setTimeout(function() {
+        $l(".game-over").attr("id", " ");
+        $l(".game-over p#final-score").html(`Your scored <b> ${thing.board.score} points </b> on <b> ${thing.difficulty} difficulty </b>`);
+        $l(".fas.fa-pause.top").attr("id", "hidden");
+        $l(".fas.fa-play.side").attr("id", "hidden");
+        $l(".fas.fa-pause.side").attr("id", " ");
+      }, 1000);
     }
 
     if (this.inSession === true) {
@@ -207,7 +165,6 @@ class GameView {
         }
 
         // element.textContent = `${coord2}`;
-
         if (this.appleCoordsMatch(element.coord, this.board.apple.coord)) {
           element.className = "apple";
         }
@@ -241,6 +198,33 @@ class GameView {
         $l("#difficulty").html(`Difficulty: ${this.difficulty}`);
       }
     }
+
+    $l(".points-counter p").html(`${this.board.score}`)
+
+//this will turn the icons in the control green depending on current direction
+    if (this.board.snake.direction === "up") {
+      $l(`.fas.fa-arrow-alt-circle-up.fa-2x`).css("color", "green");
+    } else {
+      $l(`.fas.fa-arrow-alt-circle-up.fa-2x`).css("color", "black");
+    }
+
+    if (this.board.snake.direction === "left") {
+      $l(`.fas.fa-arrow-alt-circle-left.fa-2x`).css("color", "green");
+    } else {
+      $l(`.fas.fa-arrow-alt-circle-left.fa-2x`).css("color", "black");
+    }
+
+    if (this.board.snake.direction === "down") {
+      $l(`.fas.fa-arrow-alt-circle-down.fa-2x`).css("color", "green");
+    } else {
+      $l(`.fas.fa-arrow-alt-circle-down.fa-2x`).css("color", "black");
+    }
+
+    if (this.board.snake.direction === "right") {
+      $l(`.fas.fa-arrow-alt-circle-right.fa-2x`).css("color", "green");
+    } else {
+      $l(`.fas.fa-arrow-alt-circle-right.fa-2x`).css("color", "black");
+    }
   }
 
 }
@@ -252,6 +236,11 @@ directionKeys = {
   37: "left"
 };
 
-
+timeIntervals = {
+  "difficulty-easy": 300,
+  "difficulty-medium": 200,
+  "difficulty-hard":100,
+  "difficulty-extreme": 70
+}
 
 module.exports = GameView;
