@@ -401,13 +401,11 @@ class GameView {
 
   render() {
 
-    console.log(this.board.snake.segments[this.board.snake.segments.length - 1][2]);
-
     if (this.board.score > 0 && this.board.score % 10 === 0) {
       $l(".snake-emoji-runner").attr("id", "snake-run");
     }
 
-    if (this.board.loosingCollisions()) {
+    if (this.board.loosingCollisions() ) {
       this.inSession = undefined;
       window.clearInterval(this.intervalId);
 
@@ -638,7 +636,9 @@ module.exports = Board;
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+const assignSpriteFunctions = __webpack_require__(7);
 
 
 class Snake {
@@ -649,7 +649,7 @@ class Snake {
     this.size = this.segments.length;
   }
 
-  assignDirPostSprite() {
+  assignSprite() {
 
     let segmentsLength = this.segments.length;
 
@@ -658,54 +658,18 @@ class Snake {
       let prevSegment = this.segments[i - 1];
       let nextSegment = this.segments[i + 1];
 
-      //assign the sprite of the head
       if (currSegment === this.segments[0]) {
-        if (currSegment[2] === "up") {
-          currSegment[4] = "snake-head-up";
-        } else if (currSegment[2] === "down") {
-          currSegment[4] = "snake-head-down";
-        } else if (currSegment[2] === "left") {
-          currSegment[4] = "snake-head-left";
-        } else {
-          currSegment[4] = "snake-head-right";
-        }
+        currSegment[4] = assignSpriteFunctions.assignHeadSprite(currSegment);
       } else if (currSegment === this.segments[segmentsLength - 1]) {
-        //assign the sprite of the tail
-        if (currSegment[2] === "up") {
-          currSegment[4] = "snake-tail-up";
-        } else if (currSegment[2] === "down") {
-          currSegment[4] = "snake-tail-down";
-        } else if (currSegment[2] === "left") {
-          currSegment[4] = "snake-tail-left";
-        } else if (currSegment[2] === "right") {
-          currSegment[4] = "snake-tail-right";
-        }
-      }  else if (currSegment[2] === "turning") {
-        //assign the sprite of the turning segments
-
-
-
-
-        currSegment[4] = "turning";
-
-      } else if ((prevSegment[2] === nextSegment[2]) ||
-        (prevSegment[2] === "turning" && nextSegment[2] != "turning") ||
-        prevSegment[2] != "turning" && nextSegment[2] === "turning") {
-          //the above conditional is weird but it makes sure that straight segments
-          //are assigned even if they are positioned next to turning segments
-        if (currSegment[2] === "up" || currSegment[2] === "down") {
-          //for the straight horizontal
-          currSegment[4] = "snake-body-straight-horizontal";
-        } else if (currSegment[2] === "left" || currSegment[2] === "right") {
-          //for the straight vertical
-          currSegment[4] = "snake-body-straight-vertical";
-        }
+        currSegment[4] = assignSpriteFunctions.assignTailSprite(currSegment, prevSegment);
+      } else if (currSegment[2] === "turning" && prevSegment[2] === "turning") {
+        currSegment[4] = assignSpriteFunctions.currTurnPrevTurn(currSegment, prevSegment, nextSegment);
+      } else if (currSegment[2] === "turning" && nextSegment[2] === "turning") {
+        currSegment[4] = assignSpriteFunctions.currTurnNextTurn(currSegment, prevSegment, nextSegment);
+      } else if (currSegment[2] === "turning") {
+        currSegment[4] = assignSpriteFunctions.assignTurnSprite(prevSegment, nextSegment);
       } else {
-        //sprites for the turning segments
-        if (prevSegment[2] === "left" && nextSegment[2] === "up") {
-          //turning left from from going up
-          currSegment[4] = "snake-body-turning-left-from-up";
-        }
+        currSegment[4] = assignSpriteFunctions.assignStraightSprite(prevSegment, nextSegment);
       }
     }
   }
@@ -721,8 +685,8 @@ class Snake {
     if (this.direction === "up") {
       for (let i = 0; i < this.segments.length; i ++) {
         if (i === 0) {
-          let coord1 = this.segments[i][0];   //the y axix
-          let coord2 = this.segments[i][1] - 1;  //the x axis
+          let coord1 = this.segments[i][0];   //the x axix
+          let coord2 = this.segments[i][1] - 1;  //the y axis
 
           //this "newSegment" becomes the new head
           let newSegment = [coord1, coord2, "up", "head"];
@@ -782,72 +746,54 @@ class Snake {
     this.segments = newSegments;
     //here call assignDirPost on new segments array
 
-    this.assignDirPostSprite();
+    this.assignSprite();
   }
 
   turn(newDirection) {
     if (this.isOpposite(newDirection, this.direction) === false && !this.turning) {
-      this.direction = newDirection;
+      if (this.direction != newDirection) {
+        this.direction = newDirection;
+
       //this will assign the new direction to the snake head so that it can be passed down
       //and the proper sprite can be rendered for each segment. This happens based on the
       //direction of the segment and it place in the segments array. The direction will be third
       //element in the segment array of segment in the array- the position in the array
       //will be the fourth so each segment is like the following-
       //[coord, coord, direction, position, spriteName]
-      this.segments[0][2] = newDirection;
-      //sets the direction of the second element to turning
-      if (this.segments.length > 2) {
-        this.segments[0][2] = "turning";
-      }
+        this.segments[0][2] = newDirection;
 
-      this.turning = true;
+      //sets the direction of the second element to turning
+        if (this.segments.length > 2) {
+          this.segments[0][2] = "turning";
+        }
+        this.turning = true;
+      }
     }
   }
 
   grow() {
 
-    if (this.segments.length > 1) { //this is for when the snake is more than one link long
-      let last = this.segments[this.segments.length - 1];
-      let secondLast = this.segments[this.segments.length - 2];
+    let last = this.segments[this.segments.length - 1];
+    let secondLast = this.segments[this.segments.length - 2];
 
-      if (last[0] === secondLast[0] && last[1] > secondLast[1]) {
-        //this one is for when the tail is traveling up
-        this.segments.push([last[0], last[1] + 1, "up", "tail"]);
-        last[3] = "body";
-      } else if (last[0] === secondLast[0] && last[1] < secondLast[1]) {
-        //for one the tail is traveling down
-        this.segments.push([last[0], last[1] - 1, "down", "tail"]);
-        last[3] = "body";
-      } else if (last[0] > secondLast[0] && last[1] === secondLast[1]) {
-        //for when the tail is traveling left
-        this.segments.push([last[0] + 1, last[1], "left", "tail"]);
-        last[3] = "body";
-      } else if (last[0] < secondLast[0] && last[1] === secondLast[1]) {
-        //for when the tail is traveling right
-        this.segments.push([last[0] - 1, last[1], "right", "tail"]);
-        last[3] = "body";
+    if (last[0] === secondLast[0] && last[1] > secondLast[1]) {
+      //this one is for when the tail is traveling up
+      this.segments.push([last[0], last[1] + 1, "up", "tail"]);
+      last[3] = "body";
+    } else if (last[0] === secondLast[0] && last[1] < secondLast[1]) {
+      //for one the tail is traveling down
+      this.segments.push([last[0], last[1] - 1, "down", "tail"]);
+      last[3] = "body";
+    } else if (last[0] > secondLast[0] && last[1] === secondLast[1]) {
+      //for when the tail is traveling left
+      this.segments.push([last[0] + 1, last[1], "left", "tail"]);
+      last[3] = "body";
+    } else if (last[0] < secondLast[0] && last[1] === secondLast[1]) {
+      //for when the tail is traveling right
+      this.segments.push([last[0] - 1, last[1], "right", "tail"]);
+      last[3] = "body";
 
-      }
     }
-
-
-//below no longer in use, used when the snake had no sprites and started with 1 segment
-
-    //   else { // this is for the when the snake is only one link (at the very start)
-    //   let segmentCoord1 = this.segments[0][0];
-    //   let segmentCoord2 = this.segments[0][1];
-    //
-    //
-    //   if (this.direction === "up") {
-    //     this.segments.push([segmentCoord1, segmentCoord2 + 1])
-    //   } else if (this.direction === "down") {
-    //     this.segments.push([segmentCoord1, segmentCoord2 - 1])
-    //   } else if (this.direction === "right") {
-    //     this.segments.push([segmentCoord1 - 1, segmentCoord2])
-    //   } else if (this.direction === "left") {
-    //     this.segments.push([segmentCoord1 + 1, segmentCoord2])
-    //   }
-    // }
 
     this.size = this.segments.length;
   }
@@ -882,6 +828,138 @@ class Apple {
 }
 
 module.exports = Apple;
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+function assignHeadSprite(currSegment) {
+
+  if (currSegment[2] === "up") {
+    return "snake-head-up";
+  } else if (currSegment[2] === "down") {
+    return "snake-head-down";
+  } else if (currSegment[2] === "left") {
+    return "snake-head-left";
+  } else {
+    return "snake-head-right";
+  }
+
+}
+
+function assignTailSprite(currSegment, prevSegment) {
+  if (currSegment[2] === "up") {
+    return "snake-tail-up";
+  } else if (currSegment[2] === "down") {
+    return "snake-tail-down";
+  } else if (currSegment[2] === "left") {
+    return "snake-tail-left";
+  } else if (currSegment[2] === "right") {
+    return "snake-tail-right";
+  } else if (currSegment[2] === "turning" && prevSegment[2] === "left") {
+    //the following is for cases when the tail is the last one and 'turning'
+    return "snake-tail-left";
+  } else if (currSegment[2] === "turning" && prevSegment[2] === "down") {
+    return "snake-tail-down";
+  } else if (currSegment[2] === "turning" && prevSegment[2] === "right") {
+    return "snake-tail-right";
+  } else if (currSegment[2] === "turning" && prevSegment[2] === "up") {
+    return "snake-tail-up";
+  } else if (currSegment[2] === "turning" && prevSegment[2] === "left") {
+    return "snake-tail-left";
+  } else if (prevSegment[0] > currSegment[0]) {
+    return "snake-tail-right";
+  } else if (prevSegment[0] < currSegment[0]) {
+    return "snake-tail-left";
+  } else if (prevSegment[1] > currSegment[1]) {
+    return "snake-tail-down";
+  } else if (prevSegment[1] < currSegment[1]) {
+    return "snake-tail-up";
+  }
+}
+
+//[10x, 10y, "up", "head", "snake-head-up"]
+function currTurnPrevTurn(currSegment, prevSegment, nextSegment) {
+  if (nextSegment[1] > currSegment[1] && currSegment[0] < prevSegment[0]) {
+    return "snake-body-turning-up-and-right";
+  } else if (nextSegment[1] > currSegment[1] && currSegment[0] > prevSegment[0]) {
+    return "snake-body-turning-up-and-left";
+  } else if (nextSegment[1] < currSegment[1] && currSegment[0] < prevSegment[0]) {
+    return "snake-body-turning-down-and-right";
+  } else if (nextSegment[1] < currSegment[1] && currSegment[0] > prevSegment[0]) {
+    return "snake-body-turning-down-and-left";
+  }
+
+  else if (prevSegment[1] > currSegment[1] && currSegment[0] < nextSegment[0]) {
+    return "snake-body-turning-left-and-down";
+  } else if (prevSegment[1] < currSegment[1] && currSegment[0] > nextSegment[0]) {
+    return "snake-body-turning-right-and-up";
+  } else if (prevSegment[1] < currSegment[1] && currSegment[0] < nextSegment[0]) {
+    return "snake-body-turning-left-and-up";
+  } else if (prevSegment[1] > currSegment[1] && currSegment[0] > nextSegment[0]) {
+    return "snake-body-turning-right-and-down";
+  }
+}
+
+function currTurnNextTurn(currSegment, prevSegment, nextSegment) {
+  if (nextSegment[0] < currSegment[0] && currSegment[1] < prevSegment[1]) {
+    return "snake-body-turning-right-and-down";
+  } else if (nextSegment[0] > currSegment[0] && currSegment[1] < prevSegment[1]) {
+    return "snake-body-turning-left-and-down";
+  } else if (nextSegment[0] < currSegment[0] && currSegment[1] > prevSegment[1]) {
+    return "snake-body-turning-right-and-up";
+  } else if (nextSegment[0] > currSegment[0] && currSegment[1] > prevSegment[1]) {
+    return "snake-body-turning-left-and-up";
+  }
+
+  else if (nextSegment[1] < currSegment[1] && prevSegment[0] > currSegment[0]) {
+    return "snake-body-turning-down-and-right";
+  } else if (nextSegment[1] > currSegment[1] && prevSegment[0] < currSegment[0]) {
+    return "snake-body-turning-up-and-left";
+  } else if (nextSegment[1] > currSegment[1] && prevSegment[0] > currSegment[0]) {
+    return "snake-body-turning-up-and-right";
+  } else if (nextSegment[1] < currSegment[1] && prevSegment[0] < currSegment[0]) {
+    return "snake-body-turning-down-and-left";
+  }
+}
+
+function assignTurnSprite(prevSegment, nextSegment) {
+  if (prevSegment[2] === "left" && nextSegment[2] === "up") {
+    return "snake-body-turning-up-and-left";
+  } else if (prevSegment[2] === "down" && nextSegment[2] === "left") {
+    return "snake-body-turning-left-and-down";
+  } else if (prevSegment[2] === "right" && nextSegment[2] === "down") {
+    return "snake-body-turning-down-and-right";
+  } else if (prevSegment[2] === "up" && nextSegment[2] === "right") {
+    return "snake-body-turning-right-and-up";
+  } else if (prevSegment[2] === "down" && nextSegment[2] === "right") {
+    return "snake-body-turning-right-and-down";
+  } else if (prevSegment[2] === "up" && nextSegment[2] === "left") {
+    return "snake-body-turning-left-and-up";
+  } else if (prevSegment[2] === "right" && nextSegment[2] === "up") {
+    return "snake-body-turning-up-and-right";
+  } else if (prevSegment[2] === "left" && nextSegment[2] === "down") {
+    return "snake-body-turning-down-and-left";
+  }
+
+}
+
+function assignStraightSprite(prevSegment, nextSegment) {
+  if (prevSegment[0] === nextSegment[0]) {
+    return "snake-body-straight-horizontal";
+  } else {
+    return "snake-body-straight-vertical";
+  }
+}
+
+
+module.exports.assignHeadSprite = assignHeadSprite;
+module.exports.assignTailSprite = assignTailSprite;
+module.exports.currTurnPrevTurn = currTurnPrevTurn;
+module.exports.currTurnNextTurn = currTurnNextTurn;
+module.exports.assignTurnSprite = assignTurnSprite;
+module.exports.assignStraightSprite = assignStraightSprite;
 
 
 /***/ })

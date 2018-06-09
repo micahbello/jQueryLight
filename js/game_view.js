@@ -112,13 +112,11 @@ class GameView {
 
   render() {
 
-    console.log(this.board.snake.segments[this.board.snake.segments.length - 1][2]);
-
     if (this.board.score > 0 && this.board.score % 10 === 0) {
       $l(".snake-emoji-runner").attr("id", "snake-run");
     }
 
-    if (this.board.loosingCollisions()) {
+    if (this.board.loosingCollisions() ) {
       this.inSession = undefined;
       window.clearInterval(this.intervalId);
 

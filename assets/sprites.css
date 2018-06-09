@@ -5,10 +5,6 @@
   background-position-y: -73px;
 }
 
-.snake-segment {
-  background: #9ACD32;
-}
-
 .snake-head-up {
   background-image: url(./snake-sprite.png);
   background-size: 125px;
@@ -78,13 +74,58 @@
   background-position-y: -100px;
 }
 
-.snake-body-turning-left-from-up {
+.snake-body-turning-up-and-left {
   background-image: url(./snake-sprite.png);
   background-size: 125px;
   background-position-x: -175px;
   background-position-y: -100px;
 }
 
-.turning {
-  background: red;
+.snake-body-turning-left-and-down {
+  background-image: url(./snake-sprite.png);
+  background-size: 125px;
+  background-position-x: -125px;
+  background-position-y: -100px;
+}
+
+.snake-body-turning-down-and-right {
+  background-image: url(./snake-sprite.png);
+  background-size: 125px;
+  background-position-x: -125px;
+  background-position-y: -125px;
+}
+
+.snake-body-turning-right-and-up {
+  background-image: url(./snake-sprite.png);
+  background-size: 125px;
+  background-position-x: -175px;
+  background-position-y: -150px;
+}
+
+.snake-body-turning-right-and-down {
+  background-image: url(./snake-sprite.png);
+  background-size: 125px;
+  background-position-x: -175px;
+  background-position-y: -100px;
+}
+
+.snake-body-turning-left-and-up {
+  background-image: url(./snake-sprite.png);
+  background-size: 125px;
+  background-position-x: -125px;
+  background-position-y: -125px;
+}
+
+.snake-body-turning-up-and-right {
+  background-image: url(./snake-sprite.png);
+  background-size: 125px;
+  background-position-x: -125px;
+  background-position-y: -100px;
+}
+
+.snake-body-turning-down-and-left {
+  background-image: url(./snake-sprite.png);
+  background-size: 125px;
+  background-position-x: -175px;
+  background-position-y: -150px;
 }
