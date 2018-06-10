@@ -1,0 +1,21 @@
+{
+  "name": "jQueryLight",
+  "version": "1.0.0",
+  "description": "[play live](https://micahbello.github.io/miQuery_snake/)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack": "webpack --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/micahbello/jQueryLight.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/micahbello/jQueryLight/issues"
+  },
+  "homepage": "https://github.com/micahbello/jQueryLight#readme"
+}

@@ -129,3 +129,7 @@
   background-position-x: -175px;
   background-position-y: -150px;
 }
+
+.test {
+  background: red;
+}
