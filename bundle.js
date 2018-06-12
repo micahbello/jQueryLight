@@ -65,8 +65,10 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 class DOMNodeCollection {
   constructor(elements){ //should only receive an array
     this.elements = elements
@@ -217,8 +219,8 @@ class DOMNodeCollection {
 
 }
 
-module.exports = DOMNodeCollection;
-// export default DOMNodeCollection;
+// module.exports = DOMNodeCollection;
+/* harmony default export */ __webpack_exports__["default"] = (DOMNodeCollection);
 
 
 /***/ }),
@@ -238,10 +240,13 @@ const GameView = __webpack_require__(3);
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-const DOMNodeCollection = __webpack_require__(0);
-// import DOMNodeCollection from './dom_node_collection.js';
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dom_node_collection_js__ = __webpack_require__(0);
+// const DOMNodeCollection = require("./dom_node_collection.js");
+
 //
 function $l(selector) {
 
@@ -253,8 +258,8 @@ function $l(selector) {
 
   if (typeof selector === "string") {
     let nodelist = document.querySelectorAll(selector);
-    nodelistArray = Array.from(nodelist);
-    return new DOMNodeCollection(nodelistArray)
+    let nodelistArray = Array.from(nodelist);
+    return new __WEBPACK_IMPORTED_MODULE_0__dom_node_collection_js__["default"](nodelistArray)
   } else if (typeof selector === "function") {
     queue.push(selector)
   }
@@ -330,7 +335,7 @@ class GameView {
     window.setTimeout(function(){
 
       thing.board = new Board();
-      //sets the speed accroding to the difficulty chosen
+      //sets the speed according to the difficulty chosen
       thing.intervalId = window.setInterval(thing.render, timeIntervals[difficultyLevel]);
       //makes the play button appear atop the grid area
       $l(".fas.fa-play.top").attr("id", " ");
@@ -407,7 +412,7 @@ class GameView {
 
     if (this.board.loosingCollisions()) {
 
-    
+
       this.inSession = undefined;
       window.clearInterval(this.intervalId);
 
@@ -604,6 +609,95 @@ class Board {
     }
     return colliding;
   }
+
+
+//   willSnakeCollide() {
+//     const newSegments = nextSnakeSegments();
+//     // const currentDirection = this.snake.direction;
+//     const nextHeadPos = (currentHeadPos) => {
+//
+//       //first check if the head will collide anywhere on the body of the the snake
+//
+//
+//
+//       if (this.snake.direction === "up") {
+//
+//       } else if (this.snake.direction === "down") {
+//
+//       } else if (this.snake )
+//
+//     }
+//   }
+//
+// // /*
+// //use the move method from snake as reference
+//
+//   nextSnakeSegments() {
+//
+//     let newSegments = [];
+//     //the ifs correspond to the direction of the head, that determines what the head passes to the
+//     //next link which takes its place after every render
+//     if (this.snake.direction === "up") {
+//       for (let i = 0; i < this.snake.segments.length; i ++) {
+//         if (i === 0) {
+//           let coord1 = this.snake.segments[i][0];   //the x axix
+//           let coord2 = this.snake.segments[i][1] - 1;  //the y axis
+//
+//           //this "newSegment" becomes the new head
+//           let newSegment = [coord1, coord2, "up", "head"];
+//           //gets placed in a newSegment array as the first one
+//           newSegments[i] = newSegment;
+//         } else {
+//           newSegments[i] = this.snake.segments[i - 1];
+//           newSegments[i][3] = "body"
+//         }
+//       }
+//     } else if (this.snake.direction === "down") {
+//       for (let i = 0; i < this.snake.segments.length; i ++) {
+//         if (i === 0) {
+//           let coord1 = this.snake.segments[i][0];
+//           let coord2 = this.snake.segments[i][1] + 1;
+//
+//           let newSegment = [coord1, coord2, "down", "head"];
+//           newSegments[i] = newSegment;
+//         } else {
+//           newSegments[i] = this.snake.segments[i - 1];
+//           newSegments[i][3] = "body";
+//         }
+//       }
+//     } else if (this.snake.direction === "left") {
+//       for (let i = 0; i < this.snake.segments.length; i ++) {
+//         if (i === 0) {
+//           let coord1 = this.snake.segments[i][0] - 1;
+//           let coord2 = this.snake.segments[i][1];
+//
+//           let newSegment = [coord1, coord2, "left", "head"];
+//           newSegments[i] = newSegment;
+//         } else {
+//           newSegments[i] = this.snake.segments[i - 1];
+//           newSegments[i][3] = "body"
+//         }
+//       }
+//     } else if (this.snake.direction === "right") {
+//
+//       for (let i = 0; i < this.snake.segments.length; i ++) {
+//         if (i === 0) {
+//           let coord1 = this.snake.segments[i][0] + 1;
+//           let coord2 = this.snake.segments[i][1];
+//
+//           let newSegment = [coord1, coord2, "right", "head"];
+//           newSegments[i] = newSegment;
+//         } else {
+//           newSegments[i] = this.snake.segments[i - 1];
+//           newSegments[i][3] = "body"
+//         }
+//       }
+//     }
+//
+//     return newSegments;
+//   }
+//   // */
+
 
   loosingCollisions() {
 

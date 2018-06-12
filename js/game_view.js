@@ -41,7 +41,7 @@ class GameView {
     window.setTimeout(function(){
 
       thing.board = new Board();
-      //sets the speed accroding to the difficulty chosen
+      //sets the speed according to the difficulty chosen
       thing.intervalId = window.setInterval(thing.render, timeIntervals[difficultyLevel]);
       //makes the play button appear atop the grid area
       $l(".fas.fa-play.top").attr("id", " ");
@@ -118,7 +118,7 @@ class GameView {
 
     if (this.board.loosingCollisions()) {
 
-    
+
       this.inSession = undefined;
       window.clearInterval(this.intervalId);
 

@@ -148,5 +148,5 @@ class DOMNodeCollection {
 
 }
 
-module.exports = DOMNodeCollection;
-// export default DOMNodeCollection;
+// module.exports = DOMNodeCollection;
+export default DOMNodeCollection;

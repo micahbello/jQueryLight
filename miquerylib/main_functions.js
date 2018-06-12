@@ -1,5 +1,5 @@
-const DOMNodeCollection = require("./dom_node_collection.js");
-// import DOMNodeCollection from './dom_node_collection.js';
+// const DOMNodeCollection = require("./dom_node_collection.js");
+import DOMNodeCollection from './dom_node_collection.js';
 //
 function $l(selector) {
 
@@ -11,7 +11,7 @@ function $l(selector) {
 
   if (typeof selector === "string") {
     let nodelist = document.querySelectorAll(selector);
-    nodelistArray = Array.from(nodelist);
+    let nodelistArray = Array.from(nodelist);
     return new DOMNodeCollection(nodelistArray)
   } else if (typeof selector === "function") {
     queue.push(selector)
