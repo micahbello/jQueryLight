@@ -5,6 +5,14 @@
   font-family: 'Gloria Hallelujah', cursive;
 }
 
+.body h1 {
+  border: 1px solid;
+  background: #e6e6e6;
+  width: 311px;
+  margin: 1% auto;
+  border-radius: 50px;
+}
+
 .body h3 {
   font-size: 21px;
 }
