@@ -134,7 +134,7 @@ class GameView {
 
       window.setTimeout(function() {
         $l(".game-over").attr("id", " ");
-        $l(".game-over p#final-score").html(`Your scored <b> ${thing.board.score} points </b> on <b> ${thing.difficulty} difficulty </b>`);
+        $l(".game-over p#final-score").html(`You scored <b> ${thing.board.score} points </b> on <b> ${thing.difficulty} difficulty </b>`);
         $l(".fas.fa-pause.top").attr("id", "hidden");
         $l(".fas.fa-play.side").attr("id", "hidden");
         $l(".fas.fa-pause.side").attr("id", " ");
