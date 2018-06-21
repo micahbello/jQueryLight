@@ -410,7 +410,7 @@ class GameView {
       $l(".snake-emoji-runner").attr("id", "snake-run");
     }
 
-    if (this.board.loosingCollisions()) {
+    if (this.board.willSnakeCollide()) {
 
 
       this.inSession = undefined;
@@ -566,6 +566,8 @@ class Board {
     this.snake = new Snake();
     this.apple = new Apple(this.randomAppleCoord());
     this.score = 0;
+
+    this.nextSnakeSegments = this.nextSnakeSegments.bind(this);
   }
 
   makeGrid() {
@@ -613,7 +615,7 @@ class Board {
 
 //
   willSnakeCollide() {
-    const newSegments = nextSnakeSegments();
+    const newSegments = this.nextSnakeSegments();
     // const currentDirection = this.snake.direction;
 
     let colliding = false;
@@ -633,10 +635,9 @@ class Board {
     }
     return colliding;
   }
-//
-// // /*
-// //use the move method from snake as reference
-//
+
+//the method below is the same as the snake move method. It checks the next move to see if there will
+// be a collision. the snake move method actually does the moving. DRY up later
   nextSnakeSegments() {
 
     let newSegments = [];
@@ -701,30 +702,31 @@ class Board {
 
     return newSegments;
   }
-//   // */
-//
 
-  loosingCollisions() {
+//method below was rewritten as willSnakeCollide above. Below is no longer needed. Above method
+//checks the next collsion before it actually happens 
 
-    //first if will detect when the snake is outside of the grid
-    //second if will detect when the snake collides with itself
-    let colliding = false;
-
-    if (this.snake.segments[0][0] < 0 || this.snake.segments[0][0] > 19
-      || this.snake.segments[0][1] < 0 || this.snake.segments[0][1] > 19) {
-      colliding = true;
-    } else if (this.snake.size > 1){
-      let snakeSegments = this.snake.segments.slice(1); // all segments except head
-      let snakeHead = this.snake.segments[0];
-
-      snakeSegments.forEach(segment => {
-        if (segment[0] === snakeHead[0] && segment[1] === snakeHead[1]) {
-          colliding = true;
-        }
-      });
-    }
-    return colliding;
-  }
+  // loosingCollisions() {
+  //
+  //   //first if will detect when the snake is outside of the grid
+  //   //second if will detect when the snake collides with itself
+  //   let colliding = false;
+  //
+  //   if (this.snake.segments[0][0] < 0 || this.snake.segments[0][0] > 19
+  //     || this.snake.segments[0][1] < 0 || this.snake.segments[0][1] > 19) {
+  //     colliding = true;
+  //   } else if (this.snake.size > 1){
+  //     let snakeSegments = this.snake.segments.slice(1); // all segments except head
+  //     let snakeHead = this.snake.segments[0];
+  //
+  //     snakeSegments.forEach(segment => {
+  //       if (segment[0] === snakeHead[0] && segment[1] === snakeHead[1]) {
+  //         colliding = true;
+  //       }
+  //     });
+  //   }
+  //   return colliding;
+  // }
 
   newApple() {
     this.apple = new Apple(this.randomAppleCoord());

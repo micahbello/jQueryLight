@@ -116,7 +116,7 @@ class GameView {
       $l(".snake-emoji-runner").attr("id", "snake-run");
     }
 
-    if (this.board.loosingCollisions()) {
+    if (this.board.willSnakeCollide()) {
 
 
       this.inSession = undefined;

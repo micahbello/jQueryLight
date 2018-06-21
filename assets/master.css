@@ -1,7 +1,16 @@
 .body {
   text-align: center;
   /* background: #F5FFFA; */
-  font-family: sans-serif;
+  /* font-family: sans-serif; */
+  font-family: 'Gloria Hallelujah', cursive;
+}
+
+.body h3 {
+  font-size: 21px;
+}
+
+.body h4 {
+  font-size: 17px;
 }
 
 .body:after {
@@ -10,12 +19,12 @@
     position: absolute;
     top: 0;
     left: 0;
-    /* background-image: url("./grass.jpg"); */
-    background-image: url("./snake-background.jpg");
+    background-image: url("./grass-image.jpeg");
+    /* background-image: url("./snake-background.jpg"); */
     background-size: 133%;
     width: 100%;
     height: 100%;
-    opacity : 0.5;
+    opacity : 0.6;
     z-index: -1;
 }
 
@@ -47,6 +56,10 @@
   animation-name: controls-window;
   animation-duration: 1.2s;
   animation-timing-function: ease-out;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 
 .score-div {
@@ -61,6 +74,10 @@
   animation-name: score-window;
   animation-duration: 1.2s;
   animation-timing-function: ease-out;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 
 .score-div p {
@@ -78,12 +95,17 @@
   animation-duration: 1.2s;
   animation-timing-function: ease-out;
 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.hire-me-div h5 {
+  margin: 0px 10px;
 }
 
 .hire-me-div ul {
   list-style-type: none;
-  display: contents;
-  margin: -10px 0px 0px -47px;
 }
 
 .hire-me-div li {
@@ -143,16 +165,22 @@
   border-radius: 20px;
   font-size: 18px;
   background: #e6e6e6;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 10px;
 }
 
 .game-over {
   height: 250px;
-  margin-top: 170px;
+  margin-top: 160px;
 }
 
 .game-start {
   height: 310px;
-  margin-top: 145px;
+  margin-top: 130px;
   animation-name: start-window;
   animation-duration: 1s;
   animation-timing-function: ease-out;
