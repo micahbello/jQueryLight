@@ -220,7 +220,11 @@
 .play-pause {
   float: left;
   margin-top: 26px;
-  color: green;
+  color: black;
+}
+
+.fas.fa-pause.top {
+  color: red;
 }
 
 .points-counter {
